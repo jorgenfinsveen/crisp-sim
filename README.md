@@ -1,3 +1,10 @@
+# NOTE - Update Dec 2024:
+
+- I'm working on merging into Accel-Sim and potentially Vulkan-Sim.
+- I'm updating CRISP to include Vulkan-Sim 2.0, which uses Lavapipe and no longer requires an Intel CPU. However, it may take longer than expected.
+  - The new translator also solves some limitations I had, so hopefully we can support even more workloads!
+- If you want to use the model and need help, please file an issue without hesitation.
+
 # Artifacts for CRISP: Concurrent Rendering and Compute Simulation Platform for GPUs
 
 ### Software dependencies
