@@ -32,7 +32,8 @@ After all software dependencies are met, please run the following to install the
 $ sudo apt install -y build-essential git ninja-build meson libboost-all-dev xutils-dev bison zlib1g-dev flex libglu1-mesa-dev libxi-dev libxmu-dev libdrm-dev llvm libelf-dev libwayland-dev wayland-protocols libwayland-egl-backend-dev libxcb-glx0-dev libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev libxshmfence-dev libxxf86vm-dev libxrandr-dev libglm-dev libelf-dev
 ```
 
-Download and decompress the source codes: [https://zenodo.org/records/12803388](https://zenodo.org/records/12803388)
+~~Download and decompress the source codes: [https://zenodo.org/records/12803388](https://zenodo.org/records/12803388)~~
+Use this repo. This repo has latest changes. Various bug fix etc. You can checkout zenodo for the exact version that was used in the paper. But no support is provided.
 
 The source code contains 3 folders:
 
