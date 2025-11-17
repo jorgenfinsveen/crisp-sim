@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+
+    # CUDA
+    export CUDA_VERSION="11.7.0"
+    export CUDA_HOME=/usr/local/cuda-$CUDA_VERSION
+    export CUDA_INSTALL_PATH=/usr/local/cuda-$CUDA_VERSION
+
+    # Embree
+    export EMBREE_VERSION="3.13.5"
+    export EMBREE_ROOT=/opt/embree-$EMBREE_VERSION.x86_64.linux
+    export EMBREE_DIR="$EMBREE_ROOT"
+    export embree_DIR="$EMBREE_ROOT/lib/cmake/embree-$EMBREE_VERSION"
+
+    # VulkanSDK
+    export VULKAN_VERSION="1.3.296.0"
+    export VULKAN_SDK=/opt/vulkansdk/current/x86_64
+    
+    # Build env
+    export ROOT="$HOME/projects/crisp_framework"
+    export MESA_SIM="$ROOT/mesa-vulkan-sim/lib"
+    export VK_ICD_FILENAMES="$MESA_SIM/share/vulkan/icd.d/lvp_icd.x86_64.json"
+
+    # Paths
+    export INSTALL_PATH_CONTAINER=/usr/local/bin/install
+    export PATH="$VULKAN_SDK/bin:$CUDA_HOME/bin:${PATH:+$PATH}"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$EMBREE_ROOT/lib:$CUDA_HOME/lib64:$VULKAN_SDK/lib"
+    
+%files
+    /cluster/home/jorgfi/projects/crisp_framework/.install/dependencies /usr/local/bin/install
+
+%post -c /bin/bash
+    set -e
+    export DEBIAN_FRONTEND=noninteractive
+    rm -f /etc/apt/sources.list.d/lunarg-vulkan-*.list || true
+    mkdir -p /cluster/home/jorgfi
+    mkdir -p /usr/local/bin/install
+    chmod +x /usr/local/bin/install/*.sh || true
+    . /usr/local/bin/install/commands.sh
+
+    install_dependencies /usr/local/bin/install
+    printf "\n\n\n"
+    install_software /usr/local/bin/install
+
+%runscript
+    printf "Image created.\n"
+    printf "----------------------------------------------\n"
+    printf "CUDA:\n\tVersion:\t%s\n\tLocation:\t%s\n" "$CUDA_VERSION" "$CUDA_HOME"
+    printf "Embree:\n\tVersion:\t%s\n\tLocation:\t%s\n" "$EMBREE_VERSION" "$EMBREE_ROOT"
+    printf "VulkanSDK:\n\tVersion:\t%s\n\tLocation:\t%s\n" "$VULKAN_VERSION" "$VULKAN_SDK"
+    exec "$@"

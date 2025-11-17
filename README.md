@@ -1,140 +1,146 @@
-# NOTE - Update Dec 2024:
+# Installation guide
 
-- I'm working on merging into Accel-Sim and potentially Vulkan-Sim.
-- I'm updating CRISP to include Vulkan-Sim 2.0, which uses Lavapipe and no longer requires an Intel CPU. However, it may take longer than expected.
-  - The new translator also solves some limitations I had, so hopefully we can support even more workloads!
-- If you want to use the model and need help, please file an issue without hesitation.
+This repository is forked from https://github.com/JRPan/crisp-artifact and slightly adjusted in order to run on the IDUN cluster computer at the Norwegian University of Science and Technology.
 
-# Artifacts for CRISP: Concurrent Rendering and Compute Simulation Platform for GPUs
+## Setup on host
 
-### Software dependencies
-
-The framework is tested on Ubuntu 20.04. The host computer should have Docker installed. CUDA is required to run the tracer.
-
-- gcc/g++-9
-- CUDA-11 (11.4 tested)
-- Embree v3.12.0
-- Vulkan SDK 1.2.162 or preferably newer
-- Docker
-- [Vulkan Samples](https://github.com/KhronosGroup/Vulkan-Samples)
-
-For Vulkan Samples, you can check out an earlier commit if you are experiencing CMake version issues. We used commit `2ce8856`.
-
-### Data sets
-
-All traces evaluated in the paper are provided. However, by default, only SPL paired with VIO is downloaded. If the user wishes to evaluate all workloads used in the paper, please follow the instructions accordingly.
-
-### Installation
-
-After all software dependencies are met, please run the following to install the remaining dependencies:
-
+### Cloning
 ```bash
-$ sudo apt install -y build-essential git ninja-build meson libboost-all-dev xutils-dev bison zlib1g-dev flex libglu1-mesa-dev libxi-dev libxmu-dev libdrm-dev llvm libelf-dev libwayland-dev wayland-protocols libwayland-egl-backend-dev libxcb-glx0-dev libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev libxshmfence-dev libxxf86vm-dev libxrandr-dev libglm-dev libelf-dev
+mkdir -p "$HOME/projects
+git clone https://github.com/jorgenfinsveen/crisp-sim.git crisp_framework
 ```
 
-~~Download and decompress the source codes: [https://zenodo.org/records/12803388](https://zenodo.org/records/12803388)~~
-Use this repo. This repo has latest changes. Various bug fix etc. You can checkout zenodo for the exact version that was used in the paper. But no support is provided.
-
-The source code contains 3 folders:
-
-- **accel-sim-framework:** the simulator.
-- **vulkan-sim:** the tracer.
-- **mesa-vulkan-sim:** the Mesa 3D driver.
-
-Next, set up environments:
-
+### Creating necessary directories
 ```bash
-$ export CUDA_INSTALL_PATH=/usr/local/cuda
-$ cd crisp-framework
-$ source vulkan-sim/setup_environment
+mkdir -p "$HOME/usr/local"
+mkdir -p "$HOME/opt"
+mkdir -p "$HOME/.environment/python"
 ```
 
-Build the tracer. Please ignore the error in the first ninja build:
-
+### Installing a Python environment
 ```bash
-$ cd mesa-vulkan-sim
-$ meson --prefix="${PWD}/lib" build/
-$ meson configure build/ -Dbuildtype=debug -D b_lundef=false
-$ ninja -C build/ install
-$ cd ../vulkan-sim/
-$ make -j
-$ cd ../mesa-vulkan-sim
-$ ninja -C build/ install
+module load Python/3.13.5-GCCcore-14.3.0
+python -m venv "$HOME/.environments/python/env"
+cp "$HOME/projects/.install/idun-setup/pyenv" $HOME
+chmod +x "$HOME/pyenv"
+source "$HOME/pyenv"
+
+pip install numpy
+pip install pandas
+pip install PyYaml
+pip install mako
 ```
 
-Build the Simulator within the Docker (from the crisp-framework folder):
-
+### Installing CUDA
 ```bash
-$ docker run -it --rm -v $(pwd)/accel-sim-framework:/accel-sim/accel-sim-framework tgrogers/accel-sim_regress:Ubuntu-22.04-cuda-11.7
-$ cd accel-sim-framework
-$ source gpu_simulator/setup_environment
-$ make -j -C ./gpu-simulator
-$ exit
+export CUDA_VERSION="11.7.0"
+
+module load "CUDA/$CUDA_VERSION"
+cp -r $(which nvcc) "$HOME/usr/local/cuda-11.7"
+ln -s "$HOME/usr/local/cuda-11.7" "$HOME/usr/local/cuda-$CUDA_VERSION"
 ```
 
-Finally, copy files `gpgpusim.config` and `config_turing_islip.icnt` from the crisp-framework folder to the Vulkan-Samples folder.
-
-### Experiment workflow
-
-To run the simulation:
-
+### Installing Embree3
 ```bash
-$ docker run -it --rm -v $(pwd)/accel-sim-framework:/accel-sim/accel-sim-framework tgrogers/accel-sim_regress:Ubuntu-22.04-cuda-11.7
-$ cd accel-sim-framework
-$ . get_crisp_traces.sh
-$ cd util/graphics
-$ python3 ./setup_concurrent.py
-$ cd ../../
-$ . run.sh
+export EMBREE_VERSION="3.13.5"
+cd "$HOME/opt"
+wget -O embree3.tgz https://github.com/embree/embree/releases/download/v$EMBREE_VERSION/embree-$EMBREE_VERSION.x86_64.linux.tar.gz
+tar xzf embree3.tgz && rm -f embree3.tgz
+. /opt/embree-$EMBREE_VERSION.x86_64.linux/embree-vars.sh
 ```
 
-The user can use `./util/job_launching/job_status.py` to monitor the simulation. The simulations are expected to run for 8 hours. After simulations are finished, the results are included in the folder `sim_run_11.7`.
-
-To collect the stats, simply run the following command and then exit the Docker image:
-
+### Installing VulkanSDK
 ```bash
-$ . collect.sh
-$ exit
+export VULKAN_VERSION="1.3.296.0"
+mkdir -p "$HOME/opt/vulkansdk"
+cd "$HOME/opt/vulkansdk"
+wget -O vulkansdk.tar.xz "https://sdk.lunarg.com/sdk/download/${VULKAN_VERSION}/linux/vulkansdk-linux-x86_64-${VULKAN_VERSION}.tar.xz?Human=true"
+tar -xf vulkansdk.tar.xz && rm -f vulkansdk.tar.xz
+ln -sfn "${VULKAN_VERSION}" current
 ```
 
-Several CSV files should be generated under the accel-sim-framework folder. These files contain simulation statistics such as execution cycles and cache hit rates.
 
-(optional) To collect traces, execute the command from the Vulkan-Sample folder:
 
+## Building in container
+
+### Prepare and build base-image
 ```bash
-$ VULKAN_APP=render_passes ./build/linux/app/bin/Release/x86_64/vulkan_samples sample render_passes
+mkdir -p "$HOME/containers"
+img="$HOME/containers/crisp-installer.def"
+mv $HOME/projects/crisp_framework/.install/crisp-installer.def $img
+sed -i "s|/cluster/home/jorgfi|\$HOME|g" $img
+apptainer build $HOME/containers/crisp-installer.sif $img
 ```
 
-Then wait for the tracer to finish. The resolution has been changed to 480P to speed up the process. After the process is finished, a file called `complete.traceg` should be generated in the working directory.
-
-Then, from the `accel-sim-framework/util/graphics` folder, edit line 7 to the `compelete.g` file, and optionally edit line 4 to change the output folder name.
-
+### Entering the container and mounting directories
 ```bash
-$ python3 ./process-vulkan-traces.py
+apptainer shell --nv --writable-tmpfs \
+    --bind $HOME/projects/crisp_framework:$HOME/projects/crisp_framework \
+    --pwd $HOME/projects/crisp_framework \
+    $HOME/containers/crisp-installer.sif
 ```
 
-### Evaluation and expected results
-
-The CSV files generated in the previous section contain all data used in this paper. The following scripts are used to generate figures in Section \ref{methodology}.
-
-After completing the previous step, you should have the following CSV files under `accel-sim-framework`: `render_passes_2k.csv` and `render_passes_2k_lod0.csv`.
-
-To generate the L1 texture plot similar to Figure L1 TEX Loads:
-
+### Building CRISP
 ```bash
-$ python3 ./util/graphics/l1tex.py
+export CUDA_INSTALL_PATH="$HOME/usr/local/cuda-11.7"
+source $ROOT/vulkan-sim/setup_environment
+cd $ROOT/mesa-vulkan-sim
+rm -rf build
+
+meson setup --prefix="${PWD}/lib" build \
+	-Dgallium-drivers=iris,swrast,zink \
+	-Dvulkan-drivers=intel,amd,swrast \
+	-Dplatforms=x11,wayland
+	
+meson configure build \
+	-Dbuildtype=debug \
+	-Db_lundef=false
+	
+meson configure build
+
+ninja -C build/ install
+
+export VK_ICD_FILENAMES="$ROOT/mesa-vulkan-sim/lib/share/vulkan/icd.d/lvp_icd.x86_64.json"
+
+(cd $ROOT/vulkan-sim && make -j)
+
+ninja -C build/ install
+
+cd $HOME/accel-sim-framework
+source gpu_simulator/setup_environment
+make -j -C ./gpu-simulator
+exit
 ```
 
-To generate the L2 breakdown plot similar to Figure L2 breakdown, change `./util/graphics/l2breakdown.py::7` to match the visualizer log file. The log files are generated under `sim_run*` folders.
 
+## Running the simulator
+
+### Request interactive session
 ```bash
-$ python3 ./util/graphics/l2breakdown.py
+salloc --account=share-ie-idi \
+	--cpus-per-task=1 \
+	--partition=GPUQ \
+	--mem=128G \
+	--time=15:30:00 \
+	--mail-type=ALL \
+	--mail-user=$USER@stud.ntnu.no # Use other host if applicable.
 ```
 
-To generate the concurrent ratio plot similar to Figure slicer occupancy, change `./util/graphics/concurrent_ratio.py::7` to match the visualizer log. For this one, please choose the one under `sim_run_11.7/render_passes_2k/all1/RTX3070-SASS-concurrent-fg-VISUAL`.
-
 ```bash
-$ python3 ./util/graphics/concurrent_ratio.py
+ssh $USER@[host]
 ```
 
-We provided a `.ipynb` notebook `util/graphics/working_set.ipynb` to perform static analysis as seen in Figure TEX working set.
+### Final setup
+```bash
+cd $HOME/projects/crisp_framework/accel-sim-framework
+source env_setup.sh
+
+./get_crisp_traces.sh
+
+(cd util/graphics && python3 ./setup_concurrent.py)
+```
+
+### Running the simulator
+```bash
+run
+```

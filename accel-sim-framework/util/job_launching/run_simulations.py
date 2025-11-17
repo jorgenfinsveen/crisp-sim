@@ -287,7 +287,8 @@ class ConfigurationSpec:
                             "EXEC_NAME":exec_name,
                             "QUEUE_NAME":queue_name,
                             "COMMAND_LINE":txt_args,
-                            "MEM_USAGE": mem_usage
+                            "MEM_USAGE": mem_usage,
+                            "OUT_DIR": this_run_dir
                             }
         torque_text = open(this_directory + job_template).read().strip()
         for entry in replacement_dict:

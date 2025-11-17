@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+module load Python/3.13.5-GCCcore-14.3.0
+source "$HOME/.environments/python/env/bin/activate"

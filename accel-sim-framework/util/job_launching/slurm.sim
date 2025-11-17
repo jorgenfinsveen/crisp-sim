@@ -8,8 +8,8 @@
 #SBATCH -p REPLACE_QUEUE_NAME
 #NO SBATCH --mail-type=END,FAIL
 #SBATCH --export=ALL
-#SBATCH --output=/tmp/REPLACE_NAME.o%j
-#SBATCH --error=/tmp/REPLACE_NAME.e%j
+#SBATCH --output=REPLACE_OUT_DIR/out.log
+#SBATCH --error=REPLACE_OUT_DIR/out.err
 
 copy_output() {
     mv /tmp/REPLACE_NAME.e$SLURM_JOB_ID ./REPLACE_NAME.e$SLURM_JOB_ID
@@ -52,4 +52,3 @@ export CUDA_LAUNCH_BLOCKING=1
 
 echo "doing: REPLACE_EXEC_NAME REPLACE_COMMAND_LINE"
 REPLACE_EXEC_NAME REPLACE_COMMAND_LINE
-copy_output
