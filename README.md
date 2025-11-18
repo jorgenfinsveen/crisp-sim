@@ -6,7 +6,7 @@ This repository is forked from https://github.com/JRPan/crisp-artifact and sligh
 
 ### Cloning
 ```bash
-mkdir -p "$HOME/projects
+mkdir -p "$HOME/projects"
 git clone https://github.com/jorgenfinsveen/crisp-sim.git crisp_framework
 ```
 
