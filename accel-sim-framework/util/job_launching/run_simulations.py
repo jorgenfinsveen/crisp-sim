@@ -275,6 +275,9 @@ class ConfigurationSpec:
             queue_name = os.getenv("TORQUE_QUEUE_NAME")
 
         # do the text replacement for the .sim file
+        slurm_name_var=benchmark + "-" + self.benchmark_args_subdirs[command_line_args] + "    ." + gpgpusim_build_handle
+        slurm_job_id_var=os.getenv("SLURM_JOB_ID")
+
         replacement_dict = {"NAME":benchmark + "-" + self.benchmark_args_subdirs[command_line_args] + "." +\
                                 gpgpusim_build_handle,
                             "NODES":"1", 
@@ -288,7 +291,8 @@ class ConfigurationSpec:
                             "QUEUE_NAME":queue_name,
                             "COMMAND_LINE":txt_args,
                             "MEM_USAGE": mem_usage,
-                            "OUT_DIR": this_run_dir
+                            "ERR": f'{this_run_dir}/{slurm_name_var}.e{slurm_job_id_var}',
+                            "OUT": f'{this_run_dir}/{slurm_name_var}.o{slurm_job_id_var}'
                             }
         torque_text = open(this_directory + job_template).read().strip()
         for entry in replacement_dict:
