@@ -29,6 +29,7 @@ pip install numpy
 pip install pandas
 pip install PyYaml
 pip install mako
+pip install psutil
 ```
 
 ### Installing CUDA
