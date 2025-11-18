@@ -91,9 +91,9 @@ run() {
 	export -f setup_env
 	export -f set_sim
 
-	rm err.log out.log
+	rm -f "$ACCEL_SIM/logs/*"
 	#rm -rf "sim_run_$CUDA_VERSION"
 
-	nohup bash -c 'set_sim' > out.log 2> err.log &
+	nohup bash -c 'set_sim' > "$ACCEL_SIM/out.log" 2> "$ACCEL_SIM/err.log" &
 	echo "Simulator started with PID $!"
 }

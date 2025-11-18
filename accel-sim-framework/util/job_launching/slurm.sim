@@ -8,8 +8,8 @@
 #SBATCH -p REPLACE_QUEUE_NAME
 #NO SBATCH --mail-type=END,FAIL
 #SBATCH --export=ALL
-#SBATCH --output=REPLACE_OUT
-#SBATCH --error=REPLACE_ERR
+#SBATCH --output=REPLACE_OUT.o%j
+#SBATCH --error=REPLACE_ERR.e%j
 
 copy_output() {
     mv /tmp/REPLACE_NAME.e$SLURM_JOB_ID ./REPLACE_NAME.e$SLURM_JOB_ID
