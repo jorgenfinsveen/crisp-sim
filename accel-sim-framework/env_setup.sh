@@ -26,6 +26,10 @@ export VULKAN_SDK="$HOME/opt/vulkansdk/current/x86_64"
 export PATH="$VULKAN_SDK/bin:$CUDA_HOME/bin:${PATH:+$PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$EMBREE_ROOT/lib:$CUDA_HOME/lib64:$VULKAN_SDK/lib"
 
+# Python environment
+source $HOME/pyenv
+
+
 # Sources
 setup_env() {
     GREEN="\e[32m"
@@ -88,7 +92,7 @@ run() {
 	export -f set_sim
 
 	rm err.log out.log
-	rm -rf "sim_run_$CUDA_VERSION"
+	#rm -rf "sim_run_$CUDA_VERSION"
 
 	nohup bash -c 'set_sim' > out.log 2> err.log &
 	echo "Simulator started with PID $!"
