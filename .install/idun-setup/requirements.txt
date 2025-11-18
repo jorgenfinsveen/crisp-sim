@@ -1,0 +1,13 @@
+numpy
+pandas
+plotly
+kaleido
+packaging
+python-dateutil
+pytz
+six
+tenacity
+tzdata
+PyYAML
+mako
+psutil

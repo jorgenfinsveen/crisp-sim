@@ -25,11 +25,7 @@ cp "$HOME/projects/.install/idun-setup/pyenv" $HOME
 chmod +x "$HOME/pyenv"
 source "$HOME/pyenv"
 
-pip install numpy
-pip install pandas
-pip install PyYaml
-pip install mako
-pip install psutil
+pip install -r "$HOME/projects/.install/idun-setup/requirements.txt"
 ```
 
 ### Installing CUDA
