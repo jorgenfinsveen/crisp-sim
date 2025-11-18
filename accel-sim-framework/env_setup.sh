@@ -35,11 +35,11 @@ setup_env() {
     if source "$ROOT/vulkan-sim/setup_environment" >/dev/null 2>&1; then
         echo -e "[vulkan-sim] Source: ${GREEN}Success${RESET}"
     else
-        echo -e "[vulkan-sim] Source: ${RED}Success${RESET}"
+        echo -e "[vulkan-sim] Source: ${RED}Failed${RESET}"
     fi
 
     if source "$ROOT/accel-sim-framework/gpu-simulator/setup_environment.sh" >/dev/null 2>&1; then
-        echo -e "[accel-sim] Source: ${GREEN}SUCCESS${RESET}"
+        echo -e "[accel-sim] Source: ${GREEN}Success${RESET}"
     else
         echo -e "[accel-sim] Source: ${RED}Failed${RESET}"
     fi
