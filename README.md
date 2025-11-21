@@ -82,6 +82,7 @@ apptainer shell \
 ### Building CRISP
 ```bash
 export CUDA_INSTALL_PATH="$HOME/usr/local/cuda-11.7"
+export CUDA_HOME="$HOME/usr/local/cuda-11.7"
 source $ROOT/vulkan-sim/setup_environment
 cd $ROOT/mesa-vulkan-sim
 rm -rf build
@@ -103,9 +104,9 @@ export VK_ICD_FILENAMES="$ROOT/mesa-vulkan-sim/lib/share/vulkan/icd.d/lvp_icd.x8
 
 ninja -C build/ install
 
-cd $ROOT/accel-sim-framework
-source gpu-simulator/setup_environment.sh
-make -j -C ./gpu-simulator
+(cd $ACCEL_SIM/gpu-simulator && rm -rf gpgpu-sim && source setup_environment.sh)
+(cd $ACCEL_SIM && make -j -C ./gpu-simulator)
+
 exit
 ```
 
@@ -133,7 +134,6 @@ ssh $USER@[host]
 cd $HOME/projects/crisp_framework/accel-sim-framework
 source env_setup.sh
 
-chmod +x get_crisp_traces.sh
 ./get_crisp_traces.sh
 
 (cd util/graphics && python3 ./setup_concurrent.py)

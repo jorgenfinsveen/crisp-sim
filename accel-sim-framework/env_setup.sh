@@ -80,8 +80,8 @@ assert_gcc_symlink() {
 set_sim() {
 	source $HOME/pyenv
 	cd $ACCEL_SIM
-	setup_env
     assert_gcc_symlink
+	setup_env
 	(cd util/graphics && python3 ./setup_concurrent.py)
 	./run.sh
 }
@@ -90,8 +90,9 @@ set_sim() {
 run() {
 	export -f setup_env
 	export -f set_sim
+    export -f assert_gcc_symlink
 
-	rm -f "$ACCEL_SIM/logs/*"
+	rm -rf "$ACCEL_SIM/logs" && mkdir -p "$ACCEL_SIM/logs"
 
 	nohup bash -c 'set_sim' > "$ACCEL_SIM/logs/out.log" 2> "$ACCEL_SIM/logs/err.log" &
 	echo "Simulator started with PID $!"
