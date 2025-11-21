@@ -14,7 +14,7 @@ export CUDA_INSTALL_PATH="$HOME/usr/local/cuda-$CUDA_VERSION"
 
 # Embree
 export EMBREE_VERSION="3.13.5"
-export EMBREE_ROOT="/opt/embree-$EMBREE_VERSION.x86_64.linux"
+export EMBREE_ROOT="$HOME/opt/embree-$EMBREE_VERSION.x86_64.linux"
 export EMBREE_DIR="$EMBREE_ROOT"
 export embree_DIR="$EMBREE_ROOT/lib/cmake/embree-$EMBREE_VERSION"
 
