@@ -95,8 +95,6 @@ meson configure build \
 	-Dbuildtype=debug \
 	-Db_lundef=false
 	
-meson configure build
-
 ninja -C build/ install
 
 export VK_ICD_FILENAMES="$ROOT/mesa-vulkan-sim/lib/share/vulkan/icd.d/lvp_icd.x86_64.json"
@@ -105,8 +103,8 @@ export VK_ICD_FILENAMES="$ROOT/mesa-vulkan-sim/lib/share/vulkan/icd.d/lvp_icd.x8
 
 ninja -C build/ install
 
-cd $HOME/accel-sim-framework
-source gpu_simulator/setup_environment
+cd $ROOT/accel-sim-framework
+source gpu-simulator/setup_environment.sh
 make -j -C ./gpu-simulator
 exit
 ```
@@ -135,6 +133,7 @@ ssh $USER@[host]
 cd $HOME/projects/crisp_framework/accel-sim-framework
 source env_setup.sh
 
+chmod +x get_crisp_traces.sh
 ./get_crisp_traces.sh
 
 (cd util/graphics && python3 ./setup_concurrent.py)

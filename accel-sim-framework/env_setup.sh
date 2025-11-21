@@ -42,7 +42,7 @@ setup_env() {
         echo -e "[vulkan-sim] Source: ${RED}Failed${RESET}"
     fi
 
-    if source "$ROOT/accel-sim-framework/gpu-simulator/setup_environment.sh" >/dev/null 2>&1; then
+    if source "$ACCEL_SIM/gpu-simulator/setup_environment.sh" >/dev/null 2>&1; then
         echo -e "[accel-sim] Source: ${GREEN}Success${RESET}"
     else
         echo -e "[accel-sim] Source: ${RED}Failed${RESET}"
@@ -92,8 +92,7 @@ run() {
 	export -f set_sim
 
 	rm -f "$ACCEL_SIM/logs/*"
-	#rm -rf "sim_run_$CUDA_VERSION"
 
-	nohup bash -c 'set_sim' > "$ACCEL_SIM/out.log" 2> "$ACCEL_SIM/err.log" &
+	nohup bash -c 'set_sim' > "$ACCEL_SIM/logs/out.log" 2> "$ACCEL_SIM/logs/err.log" &
 	echo "Simulator started with PID $!"
 }
