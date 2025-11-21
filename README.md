@@ -64,14 +64,16 @@ ln -sfn "${VULKAN_VERSION}" current
 ```bash
 mkdir -p "$HOME/containers"
 img="$HOME/containers/crisp-installer.def"
-mv $HOME/projects/crisp_framework/.install/crisp-installer.def $img
+cp $HOME/projects/crisp_framework/.install/container/crisp-installer.def $img
 sed -i "s|/cluster/home/jorgfi|\$HOME|g" $img
 apptainer build $HOME/containers/crisp-installer.sif $img
 ```
 
 ### Entering the container and mounting directories
 ```bash
-apptainer shell --nv --writable-tmpfs \
+apptainer shell \
+	--nv \
+	--writable-tmpfs \
     --bind $HOME/projects/crisp_framework:$HOME/projects/crisp_framework \
     --pwd $HOME/projects/crisp_framework \
     $HOME/containers/crisp-installer.sif
@@ -114,11 +116,12 @@ exit
 
 ### Request interactive session
 ```bash
-salloc --account=share-ie-idi \
-	--cpus-per-task=1 \
+salloc \
+	--account=share-ie-idi \
+	--cpus-per-task=2 \
 	--partition=GPUQ \
 	--mem=128G \
-	--time=15:30:00 \
+	--time=23:59:00 \
 	--mail-type=ALL \
 	--mail-user=$USER@stud.ntnu.no # Use other host if applicable.
 ```
