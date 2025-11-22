@@ -23,6 +23,7 @@ From: ubuntu:20.04
     export ROOT="$HOME/projects/crisp_framework"
     export MESA_SIM="$ROOT/mesa-vulkan-sim/lib"
     export VK_ICD_FILENAMES="$MESA_SIM/share/vulkan/icd.d/lvp_icd.x86_64.json"
+    export CC_VERSION="9.4.0"
 
     # Paths
     export INSTALL_PATH_CONTAINER=/usr/local/bin/install

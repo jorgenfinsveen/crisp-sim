@@ -1,5 +1,5 @@
 export CUDA_VERSION="11.7.0"
 export EMBREE_VERSION="3.13.5"
-export GCC_VERSION="9"
+export GCC_VERSION="9.4.0"
 export UBUNTU_VERSION="20.04"
 export VULKAN_VERSION="1.3.296.0"

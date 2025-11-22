@@ -6,6 +6,7 @@ export MESA_SIM="$ROOT/mesa-vulkan-sim"
 export ACCEL_SIM="$ROOT/accel-sim-framework"
 export ACCELSIM_ROOT="$ACCEL_SIM"
 export VK_ICD_FILENAMES="$MESA_SIM/lib/share/vulkan/icd.d/lvp_icd.x86_64.json"
+export CC_VERSION="9.4.0"
 
 # CUDA
 export CUDA_VERSION="11.7"
