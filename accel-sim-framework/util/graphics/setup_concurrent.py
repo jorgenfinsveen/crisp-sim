@@ -6,10 +6,10 @@ cwd = os.path.dirname(os.path.realpath(__file__)) + "/"
 trace_dir = cwd + "../../hw_run/traces/vulkan/"
 
 # gs = ["pbrtexture_2k","pbrtexture_4k", "render_passes_2k", "render_passes_4k", "instancing_2k","instancing_4k", "sponza_2k", "sponza_4k", "materials_2k", "materials_4k", "platformer_2k", "platformer_4k", "demo_2k", "demo_4k"]
-gs = ["render_passes_2k"]
+gs = ["render_passes_2k", "instancing", "pbrtexture"]
 cs = ["vpi_sample_03_harris_corners", "klt_tracker", "vpi_sample_11_fisheye", "vpi_sample_12_optflow_lk_refined"]
 css = [
-    # "ritnet", "hotlab", 
+    # "ritnet", "hotlab",
 ]
 vio = 1
 all_name = "all" + str(vio)
@@ -51,9 +51,9 @@ for g in gs:
         # get sub dir of c
         sub_dir = trace_dir + c + "/" + os.listdir(trace_dir + c + "/")[0]
         # read in file traceg
-        
+
         kernelslist = open(trace_dir + g + "/" + c + "/traces/kernelslist.g", "a+")
-        
+
         # add lines to kernelslist.g
         kernelslist.write("\n")
         kernelslist_c = open(sub_dir + "/traces/kernelslist.g", "r")
@@ -88,9 +88,9 @@ for g in gs:
         # get sub dir of c
         sub_dir = trace_dir + c + "/" + os.listdir(trace_dir + c + "/")[0]
         # read in file traceg
-        
+
         kernelslist = open(trace_dir + g + "/" + c + "/traces/kernelslist.g", "a+")
-        
+
         # add lines to kernelslist.g
         kernelslist.write("\n")
         kernelslist_c = open(sub_dir + "/traces/kernelslist.g", "r")

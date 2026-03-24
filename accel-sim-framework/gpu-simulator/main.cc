@@ -181,7 +181,7 @@ int main(int argc, const char **argv) {
   bool computes_done = false;
   bool graphics_done = false;
   m_gpgpu_sim->start_compute = true;
-  unsigned long graphics_stream_id = 0xDEADBEEF; 
+  unsigned long graphics_stream_id = 0xDEADBEEF;
   if (finished_graphics == tracer.graphics_count) {
       printf("No graphics kernel parsed\n");
       printf("STEP1 - rendering done at %llu\n", m_gpgpu_sim->gpu_tot_sim_cycle);
@@ -218,7 +218,7 @@ int main(int argc, const char **argv) {
       m_gpgpu_sim->dynamic_sm_count = m_gpgpu_sim->get_config().num_shader() / 2;
     }
   while (i < commandlist.size() || !kernels_info.empty()) {
-    //gulp up as many commands as possible - either cpu_gpu_mem_copy 
+    //gulp up as many commands as possible - either cpu_gpu_mem_copy
     //or kernel_launch - until the vector "kernels_info" has reached
     //the window_size or we have read every command from commandlist
     while (kernels_info.size() < window_size && i < commandlist.size()) {
@@ -318,7 +318,7 @@ int main(int argc, const char **argv) {
           m_gpgpu_sim->graphics_done = false;
           launched_mesa++;
         }
-        
+
         m_gpgpu_sim->launch(k);
         k->set_launched();
         busy_streams.push_back(k->get_cuda_stream_id());
@@ -459,7 +459,7 @@ int main(int argc, const char **argv) {
     }
 
     if (finished_graphics == tracer.graphics_count &&
-        tracer.graphics_count > 0 && tracer.compute_count > 0 && 
+        tracer.graphics_count > 0 && tracer.compute_count > 0 &&
         m_gpgpu_sim->getShaderCoreConfig()->gpgpu_concurrent_kernel_sm &&
         !computes_done) {
       for (auto cmd : graphics_commands) {

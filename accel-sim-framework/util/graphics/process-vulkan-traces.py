@@ -1,14 +1,30 @@
 #! /usr/bin/python3
 import os
+import argparse
+from pathlib import Path
 
-app = 'instancing_4k'
+DIR_PATH: Path = Path(__file__).resolve().parent
+HW_RUN: Path = os.path.join(DIR_PATH.parent.parent, 'hw_run')
 
-cwd = os.getcwd() + "/"
-file = "./{0}.traceg".format(app)
-# file = "/scratch/tgrogers-disk01/a/pan251/gtraces/materials_4k.traceg"
-folder = cwd + "../../hw_run/traces/vulkan-has-write/{0}/NO_ARGS/traces/".format(app)
+parser = argparse.ArgumentParser()
+parser.add_argument("--app",  required=True,  help="Name of the app to parse.")
+parser.add_argument("--src",  required=False, help="Path to the source directory.")
+parser.add_argument("--dest", required=False, help="Path to the destination directory.")
+args = parser.parse_args()
 
-assert(not os.path.exists("../../hw_run/traces/vulkan-has-write/{0}".format(app)))
+app = args.app.strip()
+
+if args.src:
+    file = Path(f"{args.src}/{app}.traceg")
+else:
+    file = Path(f"{os.getenv('HOME')}/traces/{app}.traceg")
+
+if args.dest:
+    folder = Path(f"{args.dest}/{app}/NO_ARGS/traces")
+    assert(not os.path.exists(f"{args.dest}/{app}"))
+else:
+    folder = Path(f"{HW_RUN}/traces/vulkan/{app}/NO_ARGS/traces")
+    assert(not os.path.exists(f"{HW_RUN}/traces/vulkan/{app}"))
 
 trace = open(file, 'r')
 lines = trace.readlines()
@@ -19,8 +35,8 @@ kernel_name = []
 big_str=[]
 counter = 0
 
-file = folder + "kernelslist.g"
-os.system("mkdir -p " + folder)
+file = os.path.join(folder, "kernelslist.g")
+os.system(f"mkdir -p {folder}")
 infof = open(file, "w")
 warp_range.append(0)
 for line in lines:
@@ -64,7 +80,8 @@ for line in lines:
         warp_per_block = block_dim / 32
         continue
     if 'graphics kernel end:' in line:
-        file = folder + "kernel-" + kernel_name[index_k] + "_" + str(counter) + ".traceg"
+        filename = f"kernel-{kernel_name[index_k]}_{counter}.traceg"
+        file = Path(os.path.join(folder, filename))
         infof.write("kernel-" + kernel_name[index_k] + "_" + str(counter) + ".traceg\n")
         counter = counter + 1
         print(file)

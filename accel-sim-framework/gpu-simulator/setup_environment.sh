@@ -36,8 +36,8 @@ else
 fi
 
 if [ ! -d "$THIS_DIR/gpgpu-sim" ] ; then
-    git clone https://github.com/JRPan/gpgpu-sim_distribution.git $THIS_DIR/gpgpu-sim
-    git -C $THIS_DIR/gpgpu-sim/ checkout dev-vulkan
+    git clone https://github.com/jorgenfinsveen/gpgpu-sim_distribution.git $THIS_DIR/gpgpu-sim
+    git -C $THIS_DIR/gpgpu-sim/ checkout main
 fi
 
 source $THIS_DIR/gpgpu-sim/setup_environment $ACCELSIM_CONFIG
