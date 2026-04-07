@@ -1,3 +1,4 @@
 crisp-shared: /cluster/projects/itea_lille-idi-epic-studenter/crisp/hw_run/traces/vulkan/
-crisp-local: $ACCEL_SIM/pipeline/traces/traces/vulkan/
-pipeline: $ACCEL_SIM/pipeline/traces/
+crisp-local: $ACCEL_SIM/hw_run/traces/vulkan/
+pipeline: $ACCEL_SIM/pipeline/
+crisp-shared-extended: $ACCEL_SIM/hw_run/traces/vulkan/

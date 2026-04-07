@@ -1,30 +1,30 @@
-name_prefix: sim 
+name_prefix: sim
 
 
 instances:
   # - BASELINE_ORIN
   # - BASELINE_RTX3070
-  # - ORIN_1
-  # - ORIN_2
-  # - ORIN_3
-  # - ORIN_4
-  # - ORIN_5
-  - RTX3070_1
-  - RTX3070_2
-  - RTX3070_3
-  - RTX3070_4
-  - RTX3070_5
+  - ORIN_1
+  - ORIN_2
+  - ORIN_3
+  - ORIN_4
+  - ORIN_5
+  #- RTX3070_1
+  #- RTX3070_2
+  #- RTX3070_3
+  #- RTX3070_4
+  #- RTX3070_5
 
 
 experiment:
-  name: more_streaming_multiprocessors
+  name: debugging-short
   path: $ACCEL_SIM/pipeline/setup/experiments.yaml
 
 
 #Options for collect
 collect:
   detailed: true
-  metric: gpu_cpi
+  metric: gstack_base
 
 
 launcher: idun
@@ -32,7 +32,7 @@ override_names: true
 aggregate: true
 
 
-# For Slurm jobs. 
+# For Slurm jobs.
 # See more configuration-options in accel-sim-framework/util/job_launching/idun.yaml.
 job_mem: 64G # Default is 4G, but this turned out to be insufficient for the workloads in the artifact.
 
