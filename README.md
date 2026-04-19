@@ -14,7 +14,7 @@ export IDUN_SETUP="$CRISP_ROOT/.install/idun-setup"
 
 ### Creating necessary directories
 ```bash
-mkdir -p "$HOME"/{opt,usr/local,.environments/python}
+mkdir -p "$HOME"/{opt,usr/local/bin,usr/local/cuda,.environments/python}
 ```
 
 ### Installing a Python environment
@@ -30,11 +30,12 @@ pip install -r "$IDUN_SETUP/requirements.txt"
 ### Installing CUDA
 ```bash
 export CUDA_VERSION="11.7"
-export CUDA_DEST="$HOME/usr/local/cuda-$CUDA_VERSION"
+export CUDA_DEST="$HOME/usr/local/cuda/cuda-$CUDA_VERSION"
 
 module load "CUDA/$CUDA_VERSION.0"
 cp -r "$CUDA_HOME" "$CUDA_DEST"
-ln -s "$CUDA_DEST" "$CUDA_DEST.0"
+mv "$CUDA_DEST.0" "$CUDA_DEST"
+ln -s "$CUDA_DEST/bin" "$HOME/usr/local/bin/cuda"
 ```
 
 ### Installing Embree3
@@ -89,8 +90,8 @@ apptainer shell \
 
 ### Building CRISP
 ```bash
-export CUDA_INSTALL_PATH="$HOME/usr/local/cuda-11.7"
-export CUDA_HOME="$HOME/usr/local/cuda-11.7"
+export CUDA_INSTALL_PATH="$HOME/usr/local/cuda/cuda-11.7"
+export CUDA_HOME="$HOME/usr/local/cuda/cuda-11.7"
 export VULKAN_SDK="$HOME/opt/vulkansdk/current/x86_64"
 export EMBREE_ROOT="/opt/embree-$EMBREE_VERSION.x86_64.linux"
 export PATH="$VULKAN_SDK/bin:$CUDA_HOME/bin:${PATH:+$PATH}"
@@ -98,6 +99,7 @@ export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$EMBREE_ROOT/lib:$C
 export ROOT="$HOME/projects/crisp_framework"
 export VULKAN_SIM="$ROOT/vulkan-sim"
 export MESA_SIM="$ROOT/mesa-vulkan-sim"
+exoprt MESA_ROOT="$ROOT/mesa-vulkan-sim"
 export ACCEL_SIM="$ROOT/accel-sim-framework"
 
 source "$VULKAN_SIM/setup_environment"
