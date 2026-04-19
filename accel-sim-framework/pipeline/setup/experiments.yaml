@@ -29,9 +29,25 @@ debugging-long:
   benchmarks:
     - crisp-shared-extended:render_passes_2k
     - crisp-shared-extended:klt_tracker
-    - crisp-shared-extended:vpi_sample_03_harris_corners
+    #- crisp-shared-extended:vpi_sample_03_harris_corners
     - crisp-shared-extended:vpi_sample_11_fisheye
-    - crisp-shared-extended:vpi_sample_12_optflow_lk_refined
+    #- crisp-shared-extended:vpi_sample_12_optflow_lk_refined
     - crisp-shared-extended:render_passes_2k_lod0
+  results_dir: $ACCEL_SIM/pipeline/results
+  logfiles: $ACCEL_SIM/pipeline/results/logfiles
+
+
+all-render-benchmarks-local:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpu_cpi
+  benchmarks:
+    - crisp-local:render_passes_2k
+    - crisp-local:render_passes_2k_lod0
+    - crisp-local:gears
+    - crisp-local:instancing
+    - crisp-local:pbrtexture
+    - crisp-local:tessellation
   results_dir: $ACCEL_SIM/pipeline/results
   logfiles: $ACCEL_SIM/pipeline/results/logfiles

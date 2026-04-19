@@ -15,16 +15,21 @@ collect_aggregate:
 # These stats are reset each kernel and should not be diff'd
 # They cannot be used is only collecting the final_kernel stats
 collect_abs:
+
+    - 'gpu_tot_sim_insn\s*=\s*(.*)'
+    - 'gpu_tot_sim_cycle\s*=\s*(.*)'
     - 'gcstack_base\s*=\s*(.*)'
     - 'gcstack_idle\s*=\s*(.*)'
+    - 'gcstack_finished\s*=\s*(.*)'
+    - 'gcstack_empty_ibuf\s*=\s*(.*)'
+    - 'gcstack_last_ins\s*=\s*(.*)'
     - 'gcstack_sync\s*=\s*(.*)'
     - 'gcstack_control\s*=\s*(.*)'
     - 'gcstack_mem_data\s*=\s*(.*)'
     - 'gcstack_com_data\s*=\s*(.*)'
     - 'gcstack_mem_struct\s*=\s*(.*)'
     - 'gcstack_com_struct\s*=\s*(.*)'
-    - 'gpu_tot_sim_insn\s*=\s*(.*)'
-    - 'gpu_tot_sim_cycle\s*=\s*(.*)'
+    - 'gcstack_tot\s*=\s*(.*)'
     - '\s+L2_cache_stats_breakdown\[GLOBAL_ACC_R\]\[HIT\]\s*=\s*(.*)'
     - '\s+L2_cache_stats_breakdown\[GLOBAL_ACC_R\]\[MISS\]\s*=\s*(.*)'
     - '\s+L2_cache_stats_breakdown\[GLOBAL_ACC_R\]\[TOTAL_ACCESS\]\s*=\s*(.*)'

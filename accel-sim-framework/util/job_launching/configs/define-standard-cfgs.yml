@@ -407,3 +407,19 @@ RTX3070_4:
 
 RTX3070_5:
     base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_5/gpgpusim.config"
+
+
+ORIN_2s:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/ORIN_2s/gpgpusim.config"
+
+
+ORIN_3s:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/ORIN_3s/gpgpusim.config"
+
+
+RTX3070_2s:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_2s/gpgpusim.config"
+
+
+RTX3070_3s:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_3s/gpgpusim.config"
