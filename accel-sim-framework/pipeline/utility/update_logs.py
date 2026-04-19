@@ -36,7 +36,7 @@ hashes = {}
 
 def nonexistent_error(filename, filepath):
     gpgpusim_root = os.getenv("GPGPUSIM_ROOT")
-    error_logs = os.path.join(gpgpusim_root, "../../pipeline/setup/pipeline.yaml")
+    error_logs = os.path.join(gpgpusim_root, "../../pipeline/logs/update_logs.err")
     with open(error_logs, "a",encoding="utf-8") as f:
         f.write(f"[{args.target}] unable to find {filename} at: {filepath}")
     print(f"[{args.target}] unable to find {filename} at: {filepath}")
@@ -55,7 +55,7 @@ def parse_sim_logs():
 def parse_pipeline_config():
     global pipeline
     pipeline = ps.get_pipeline(args.pipeline)
-    
+
 
 def parse_experiment():
     global experiment
@@ -102,9 +102,11 @@ def collect_instance_stats(root, param_fields, result_fields, allowed_names: lis
         if param not in list(apps_d[app]):
             apps_d[app].append(f"{param}")
 
+        param = param.lstrip("_")
+
         if config not in allowed_names:
             continue
-        
+
         if config not in results:
             results[config] = {}
 
@@ -129,11 +131,11 @@ def collect_instance_stats(root, param_fields, result_fields, allowed_names: lis
 
 def main():
     if not args.no_sleep:
-        time.sleep(10)
+        time.sleep(60)
     parse_sim_logs()
     parse_pipeline_config()
     parse_experiment()
-    
+
     global logs, target
     if logs is None:
         logs = ps.new_sim_log(os.path.expandvars(args.logs))
@@ -160,7 +162,7 @@ def main():
     target.configs          = configs
     target.benchmarks      = benchmarks
     target.results         = results
-    
+
     new_logs = {log_name: ps.sim_logs_to_dict(target)}
 
     for k, v in logs.items():
@@ -169,6 +171,6 @@ def main():
 
     with open(os.path.expandvars(args.logs), "w", encoding="utf-8") as f:
         yaml.safe_dump(new_logs, f, sort_keys=False, allow_unicode=True)
-    
+
 
 main()

@@ -470,8 +470,23 @@ crisp-shared:
     data_dirs: "$HOME/test/"
     execs:
         - render_passes_2k:
-         # - args: 'NO_ARGS'
+          #- args: 'NO_ARGS'
           - args: 'all1'
+
+crisp-shared-extended:
+    exec_dir: "$HOME/test/"
+    data_dirs: "$HOME/test/"
+    execs:
+        - render_passes_2k:
+          - args: 'NO_ARGS'
+        - klt_tracker:
+          - args: "cam0"
+        - vpi_sample_03_harris_corners:
+          - args: "cuda__home_pan251_cam0_img_0126_png"
+        - vpi_sample_11_fisheye:
+          - args: "_c_10_7__s_22___cam0_img_0000_png"
+        - vpi_sample_12_optflow_lk_refined:
+          - args: "cuda__home_pan251_cam0_10_img__4d_png_5_frames_png"
         - render_passes_2k_lod0:
           - args: 'NO_ARGS'
 

@@ -376,6 +376,22 @@ ORIN_4:
 ORIN_5:
     base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/ORIN_5/gpgpusim.config"
 
+RTX3070_1:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_1/gpgpusim.config"
+
+RTX3070_2:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_2/gpgpusim.config"
+
+RTX3070_3:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_3/gpgpusim.config"
+
+RTX3070_4:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_4/gpgpusim.config"
+
+RTX3070_5:
+    base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/RTX3070_5/gpgpusim.config"
+
+
 
 TEST_1:
     base_file: "/cluster/home/jorgfi/projects/crisp_framework/accel-sim-framework/gpu-simulator/gpgpu-sim/configs/custom-cfgs/TEST_1/gpgpusim.config"

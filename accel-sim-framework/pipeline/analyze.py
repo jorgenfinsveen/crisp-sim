@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 # Todo: Her kan vi lage kode for å lese csv- og visualizer-fil for å generere plots 
 # Todo: Det er mulig vi er interessert i andre plots enn det som allerede finnes av plottescripts
 # Todo: Det kan også være en idé å lage noe som trekker ut et gitt sett med verdier fra de forskjellige resultat-filene 
 # Todo: ... og sammenligner hvilket som oppnådde best IPC, og deretter lagrer disse tallene + konfigurasjonen som ble brukt
 # Todo: ... Det ville være gull verdt når vi gjør design-sweepinga!
+from pathlib import Path
 import os
 import sys
 import argparse
 import utility.parser as ps
 
-from pathlib import Path
-from __future__ import annotations
+
 
 #Importing functions for plotting
 from utility.plots.bar_chart import bar_chart
+from utility.plots.stacked_bar_chart import stacked_bar_chart
 
 PIPELINE_ROOT = Path(__file__).resolve().parent
 PIPELINE_YAML = os.path.join(PIPELINE_ROOT, "setup", "pipeline.yaml")
@@ -51,9 +53,14 @@ def find_experiment_csvs(metric_metric: str) -> list[Path]:
     return sorted([p for p in hits if p.is_file()])
 
 def default_run():
-    metric_metric = load_metric_metric()
-    csvs = find_experiment_csvs(metric_metric)
-    run_bar_charts_for_csvs(csvs)
+    #metric_metric = load_metric_metric()
+    global pipeline
+    pipeline = ps.get_pipeline(PIPELINE_YAML)
+    exp_name = pipeline.experiment.name
+    print(exp_name)
+    csvs = find_experiment_csvs(exp_name)
+    #run_bar_charts_for_csvs(csvs)
+    run_stacked_bar_charts_for_csvs(csvs)
 
 def run_bar_charts_for_csvs(csv_paths: list[Path]):
     if not csv_paths:
@@ -68,6 +75,21 @@ def run_bar_charts_for_csvs(csv_paths: list[Path]):
             print(f"plotted: {csv_path}")
         except TypeError:
             bar_chart(str(csv_path))
+            print(f"plotted: {csv_path}")
+
+def run_stacked_bar_charts_for_csvs(csv_paths: list[Path]):
+    if not csv_paths:
+        print("No matching CSV files found.")
+        return
+
+    print(f"Found {len(csv_paths)} CSV files. Generating stacked bar charts...")
+
+    for csv_path in csv_paths:
+        try:
+            stacked_bar_chart(str(csv_path))
+            print(f"plotted: {csv_path}")
+        except TypeError:
+            stacked_bar_chart(str(csv_path))
             print(f"plotted: {csv_path}")
 
 

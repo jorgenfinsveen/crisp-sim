@@ -22,6 +22,21 @@ instances:
 
 experiment:
   name: all-render-benchmarks-local
+  - ORIN_1
+  - ORIN_2
+  - ORIN_3
+  - ORIN_4
+  - ORIN_5
+  - RTX3070_1
+  - RTX3070_2
+  - RTX3070_3
+  - RTX3070_4
+  - RTX3070_5
+  
+
+
+experiment:
+  name: clusters_vs_cpi
   path: $ACCEL_SIM/pipeline/setup/experiments.yaml
 
 

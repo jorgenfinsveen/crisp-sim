@@ -89,7 +89,7 @@ def main():
         os.system(f'bash {export_sh}')
     run_csv_generator = input("Run csv generator for the test result? [y/N]: ")
     if run_csv_generator == "y":
-        os.system(f'./utility/csv_generator.py')
+        os.system(f'./utility/collect-csv.py')
 
 if __name__ == "__main__":
     main()
