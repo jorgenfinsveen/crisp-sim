@@ -2,6 +2,26 @@ name_prefix: sim
 
 
 instances:
+  #- BASELINE_ORIN
+  #- BASELINE_RTX3070
+  - ORIN_1
+  # - ORIN_2
+  # - ORIN_3
+  - ORIN_2s
+  - ORIN_3s
+  # - ORIN_4
+  # - ORIN_5
+  - RTX3070_1
+  # - RTX3070_2
+  - RTX3070_2s
+  - RTX3070_3s
+  # - RTX3070_3
+  # - RTX3070_4
+  # - RTX3070_5
+
+
+experiment:
+  name: all-render-benchmarks-local
   - ORIN_1
   - ORIN_2
   - ORIN_3
@@ -23,7 +43,7 @@ experiment:
 #Options for collect
 collect:
   detailed: true
-  metric: gpu_cpi
+  metric: gstack_base
 
 
 launcher: idun

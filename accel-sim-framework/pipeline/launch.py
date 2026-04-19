@@ -2,6 +2,7 @@
 
 import os
 import yaml
+import argparse
 import importlib.util
 from pathlib import Path
 
@@ -14,6 +15,13 @@ spec = importlib.util.spec_from_file_location("parser", PARSER)
 parser = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(parser)
 
+
+argparser = argparse.ArgumentParser()
+argparser.add_argument("--run", required=False, help="Run jobs right away?")
+args = argparser.parse_args()
+if (args.run): args.run = args.run.strip()
+
+
 pipeline = {}
 traces = {}
 experiment = {}
@@ -23,7 +31,7 @@ def parse_pipeline_config():
     pipeline = parser.get_pipeline()
     pipeline.trace_lookup = Path(os.path.expandvars(pipeline.trace_lookup))
     for dest in pipeline.config_destinations:
-        pipeline.config_destinations[dest] = Path(os.path.expandvars(pipeline.config_destinations[dest]))    
+        pipeline.config_destinations[dest] = Path(os.path.expandvars(pipeline.config_destinations[dest]))
     arr = []
     for instance in pipeline.instances:
         arr.append(instance.replace("-", "_"))
@@ -60,9 +68,11 @@ def prepare_instance(instance):
             return False
 
     dest = pipeline.config_destinations
+    os.system(f"mkdir -p {Path(dest.gpgpusim)} {Path(dest.trace)}")
+    
     gpgpusim_target = os.path.join(dest.gpgpusim, instance)
     trace_target = os.path.join(dest.trace, instance)
-    
+
     os.system(f"rsync -av --exclude='trace.config' '{src_dir}/' '{gpgpusim_target}/'")
     os.system(f"rsync -av '{src_dir}/trace.config' '{trace_target}/'")
 
@@ -72,7 +82,7 @@ def prepare_instance(instance):
     )
 
     new_line = f'    base_file: "{gpgpusim_target}/gpgpusim.config"\n'
-    
+
     with open(cfgs_yml, "r") as f:
         data = yaml.safe_load(f) or {}
 
@@ -151,7 +161,7 @@ def main():
         inst for inst in pipeline.instances
         if prepare_instance(inst)
     ]
-    
+
     if pipeline.aggregate:
         for benchmark in experiment.benchmarks: commands.append(build_command(benchmark, aggregate=True))
     else:
@@ -163,6 +173,10 @@ def main():
     os.system(f"chmod +x {export_path}")
 
     print(f'\n\nScript to start simulator-instances written to: \n - {export_path}')
+
+    if (args.run):
+        os.system(f'bash {export_path}')
+        return
 
     while True:
         ans = input('\nStart instances now (y/n): ').strip()

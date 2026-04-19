@@ -38,12 +38,12 @@ DATE := $(shell date +%Y%m%d-%H%M)
 ACCELSIM_BUILD := accelsim-commit-$(GIT_COMMIT)_modified_$(GIT_FILES_CHANGED)_$(DATE)
 endif
 
-# Detect CUDA Runtime Version 
+# Detect CUDA Runtime Version
 CUDA_VERSION_STRING:=$(shell $(CUDA_INSTALL_PATH)/bin/nvcc --version | awk '/release/ {print $$5;}' | sed 's/,//')
 CUDART_VERSION:=$(shell echo $(CUDA_VERSION_STRING) | sed 's/\./ /' | awk '{printf("%02u%02u", 10*int($$1), 10*$$2);}')
 
-# Detect GCC Version 
+# Detect GCC Version
 CC_VERSION := $(shell echo 9.4.0)
 
-# Detect Support for C++11 (C++0x) from GCC Version 
+# Detect Support for C++11 (C++0x) from GCC Version
 GNUC_CPP0X := $(shell gcc --version | perl -ne 'if (/gcc\s+\(.*\)\s+([0-9.]+)/){ if($$1 >= 4.3) {$$n=1} else {$$n=0;} } END { print $$n; }')
