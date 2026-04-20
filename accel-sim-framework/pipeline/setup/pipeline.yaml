@@ -22,14 +22,14 @@ instances:
 
 
 experiment:
-  name: debugging-short
+  name: rendering_sm_sensitivity
   path: $ACCEL_SIM/pipeline/setup/experiments.yaml
 
 
 #Options for collect
 collect:
   detailed: true
-  metric: gstack_base
+  metric: gcstack_base
 
 
 launcher: idun

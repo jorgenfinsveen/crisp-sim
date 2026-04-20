@@ -507,6 +507,23 @@ crisp-shared-extended:
         - render_passes_2k_lod0:
           - args: 'NO_ARGS'
 
+crisp-shared-all-render:
+    exec_dir: "$HOME/test/"
+    data_dirs: "$HOME/test/"
+    execs:
+        - render_passes_2k:
+          - args: 'NO_ARGS'
+        - render_passes_2k_lod0:
+          - args: 'NO_ARGS'
+        - gears_2k:
+          - args: 'NO_ARGS'
+        - instancing_2k:
+          - args: 'NO_ARGS'
+        - pbrtexture_2k:
+          - args: 'NO_ARGS'
+        - tessellation_2k:
+          - args: 'NO_ARGS'
+
 crisp-local:
     exec_dir: "$HOME/test/"
     data_dirs: "$HOME/test/"
@@ -516,13 +533,13 @@ crisp-local:
          # - args: 'all1'
         - render_passes_2k_lod0:
           - args: 'NO_ARGS'
-        - gears:
+        - gears_2k:
           - args: 'NO_ARGS'
-        - instancing:
+        - instancing_2k:
           - args: 'NO_ARGS'
-        - pbrtexture:
+        - pbrtexture_2k:
           - args: 'NO_ARGS'
-        - tessellation:
+        - tessellation_2k:
           - args: 'NO_ARGS'
         - klt_tracker:
           - args: "cam0"

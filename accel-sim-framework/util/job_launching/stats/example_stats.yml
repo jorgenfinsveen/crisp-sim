@@ -15,7 +15,6 @@ collect_aggregate:
 # These stats are reset each kernel and should not be diff'd
 # They cannot be used is only collecting the final_kernel stats
 collect_abs:
-
     - 'gpu_tot_sim_insn\s*=\s*(.*)'
     - 'gpu_tot_sim_cycle\s*=\s*(.*)'
     - 'gcstack_base\s*=\s*(.*)'
