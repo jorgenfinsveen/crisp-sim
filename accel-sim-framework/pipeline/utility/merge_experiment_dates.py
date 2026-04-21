@@ -144,18 +144,49 @@ def rename_outfiles():
         e_file_1 = os.path.join(d, f'{date_1}.e')
         o_file_2 = os.path.join(d, f'{date_2}.o')
         e_file_2 = os.path.join(d, f'{date_2}.e')
+        new_o_path = os.path.join(d, new_o_name)
+        new_e_path = os.path.join(d, new_e_name)
+
+        existing_o_sources = []
+        existing_e_sources = []
+        if date_1 != new_date and os.path.exists(o_file_1):
+            existing_o_sources.append(o_file_1)
+        if date_2 != new_date and os.path.exists(o_file_2):
+            existing_o_sources.append(o_file_2)
+        if date_1 != new_date and os.path.exists(e_file_1):
+            existing_e_sources.append(e_file_1)
+        if date_2 != new_date and os.path.exists(e_file_2):
+            existing_e_sources.append(e_file_2)
+
+        if len(existing_o_sources) > 1:
+            raise FileExistsError(
+                f'Cannot rename multiple .o files to {new_o_path}: {existing_o_sources}'
+            )
+        if len(existing_e_sources) > 1:
+            raise FileExistsError(
+                f'Cannot rename multiple .e files to {new_e_path}: {existing_e_sources}'
+            )
+
+        if len(existing_o_sources) == 1 and os.path.exists(new_o_path):
+            raise FileExistsError(
+                f'Destination already exists while renaming output file: {new_o_path}'
+            )
+        if len(existing_e_sources) == 1 and os.path.exists(new_e_path):
+            raise FileExistsError(
+                f'Destination already exists while renaming error file: {new_e_path}'
+            )
 
         if date_1 != new_date:
             if os.path.exists(o_file_1):
-                os.rename(o_file_1, os.path.join(d, new_o_name))
+                os.rename(o_file_1, new_o_path)
             if os.path.exists(e_file_1):
-                os.rename(e_file_1, os.path.join(d, new_e_name))
+                os.rename(e_file_1, new_e_path)
 
         if date_2 != new_date:
             if os.path.exists(o_file_2):
-                os.rename(o_file_2, os.path.join(d, new_o_name))
+                os.rename(o_file_2, new_o_path)
             if os.path.exists(e_file_2):
-                os.rename(e_file_2, os.path.join(d, new_e_name))
+                os.rename(e_file_2, new_e_path)
 
 def main():
     print("Updating simulator_logs.yaml...")
