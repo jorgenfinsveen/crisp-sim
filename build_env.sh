@@ -3,6 +3,7 @@
 # Build and session management
 export ROOT="$HOME/projects/crisp_framework"
 export MESA_SIM="$ROOT/mesa-vulkan-sim"
+export MESA_ROOT="$ROOT/mesa-vulkan-sim"
 export VULKAN_SIM="$ROOT/vulkan-sim"
 export ACCEL_SIM="$ROOT/accel-sim-framework"
 export ACCELSIM_ROOT="$ACCEL_SIM"
