@@ -3,7 +3,7 @@ name_prefix: sim
 
 instances:
   - BASELINE_ORIN
-  #- BASELINE_RTX3070
+  - BASELINE_RTX3070
   # - ORIN_1
   # - ORIN_2
   # - ORIN_3

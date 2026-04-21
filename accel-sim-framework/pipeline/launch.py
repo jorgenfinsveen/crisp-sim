@@ -69,7 +69,7 @@ def prepare_instance(instance):
 
     dest = pipeline.config_destinations
     os.system(f"mkdir -p {Path(dest.gpgpusim)} {Path(dest.trace)}")
-    
+
     gpgpusim_target = os.path.join(dest.gpgpusim, instance)
     trace_target = os.path.join(dest.trace, instance)
 
@@ -119,7 +119,7 @@ def build_command(benchmark, instance=None, aggregate=False):
     cmd.append(f"--launcher {pipeline.launcher}")
     cmd.append(f"--benchmark_list {benchmark}")
     cmd.append(f"--trace_dir {traces[benchmark.split(':')[0]]}")
-    cmd.append(f"--launch_name {pipeline.name_prefix}-{instance}")
+    cmd.append(f"--launch_name {pipeline.name_prefix}-$launch_date")
     cmd.append(f"--run_directory {experiment_dir}")
     cmd.append(f"--logfile_dir_dest {experiment.logfiles}")
     cmd.append(f"--configs_list {instance_configs}")
@@ -127,15 +127,43 @@ def build_command(benchmark, instance=None, aggregate=False):
     return cmd
 
 
+def build_cache_command():
+    directory = os.path.join(experiment.results_dir, 'output')
+    benchmarks = ",".join(i for i in experiment.benchmarks)
+    parameters = ",".join(i for i in experiment.params)
+    configurations = ",".join(i for i in pipeline.instances)
+    result_variables = ",".join(i for i in experiment.results)
+
+    cmd = []
+    cmd.append(os.path.expandvars('$ACCEL_SIM/pipeline/utility/cache_launch_data.py'))
+    cmd.append('--date $launch_date')
+    cmd.append(f'--experiment {experiment.name}')
+    cmd.append(f'--accelsim_commit {os.getenv("ACCELSIM_COMMIT")}')
+    cmd.append(f'--gpgpusim_commit {os.getenv("GPGPUSIM_COMMIT")}')
+    cmd.append(f'--directory {directory}')
+    cmd.append(f'--benchmarks {benchmarks}')
+    cmd.append(f'--parameters {parameters}')
+    cmd.append(f'--configurations {configurations}')
+    cmd.append(f'--result_variables {result_variables}')
+
+    return cmd
+
+
+
 def export_commands(commands, path):
     with open(path, 'w') as f:
         f.write('#!/usr/bin/env bash\n')
         f.write('set -euo pipefail\n\n')
+        f.write(f'launch_date=$(date +"%Y_%m_%d__%H_%M")\n\n')
         for command in commands:
             cmd = command[0] + ' \\\n'
             for i in range(1, len(command)):
                 cmd += '\t' + command[i] + ' \\\n'
             f.write(cmd[:-3] + '\n\n')
+
+        for num, line in enumerate(build_cache_command()):
+            f.write('\t' + line + ' \\\n' if num > 0 else line + ' \\\n')
+
 
 
 def ensure_dirs_present():
