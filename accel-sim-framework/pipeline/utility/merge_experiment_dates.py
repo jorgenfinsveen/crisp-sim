@@ -9,8 +9,6 @@ from datetime import datetime
 from model.simlog import SimulatorLogs, SimulatorLog
 from model.namespace import NS
 
-IGNORE_DIRS = ['.post-sim', 'gpgpu-sim-builds']
-
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--exp",      required=True, help="Name of the experiment.")
 argparser.add_argument("--date_1",   required=True, help="First date to merge. [YYYY_mm_DD__HH_MM].")
@@ -60,16 +58,53 @@ def get_configs(sim_logs: SimulatorLogs) -> list:
 
     return list(dict.fromkeys(configs))
 
+def merge_result_dicts(left: dict, right: dict, path: tuple = ()) -> dict:
+    merged = dict(left)
+
+    for key, right_value in dict(right).items():
+        if key not in merged:
+            merged[key] = right_value
+            continue
+
+        left_value = merged[key]
+        current_path = path + (key,)
+
+        if isinstance(left_value, dict) and isinstance(right_value, dict):
+            merged[key] = merge_result_dicts(left_value, right_value, current_path)
+        elif left_value == right_value:
+            merged[key] = left_value
+        else:
+            dotted_path = '.'.join(str(part) for part in current_path)
+            raise ValueError(
+                f'Conflicting simulator log results at "{dotted_path}" while merging '
+                f'sim-{date_1} and sim-{date_2}'
+            )
+
+    return merged
+
 def get_sim_log_results(sim_logs: SimulatorLogs):
     entry_1 = SimulatorLog(sim_logs[f'sim-{date_1}'])
     entry_2 = SimulatorLog(sim_logs[f'sim-{date_2}'])
 
-    return dict(entry_1.results) | dict(entry_2.results)
+    return merge_result_dicts(dict(entry_1.results), dict(entry_2.results))
 
 def get_sim_log_commits(sim_logs: SimulatorLogs):
-    entry = SimulatorLog(sim_logs[f'sim-{date_1}'])
-    return entry.accelsim_commit, entry.gpgpusim_commit
+    entry_1 = SimulatorLog(sim_logs[f'sim-{date_1}'])
+    entry_2 = SimulatorLog(sim_logs[f'sim-{date_2}'])
 
+    if entry_1.accelsim_commit != entry_2.accelsim_commit:
+        raise ValueError(
+            f"Cannot merge simulator logs for {date_1} and {date_2}: "
+            f"accelsim_commit differs ({entry_1.accelsim_commit} != {entry_2.accelsim_commit})."
+        )
+
+    if entry_1.gpgpusim_commit != entry_2.gpgpusim_commit:
+        raise ValueError(
+            f"Cannot merge simulator logs for {date_1} and {date_2}: "
+            f"gpgpusim_commit differs ({entry_1.gpgpusim_commit} != {entry_2.gpgpusim_commit})."
+        )
+
+    return entry_1.accelsim_commit, entry_1.gpgpusim_commit
 def merge_sim_log_entries():
     sim_logs = ps.get_simulator_logs(sim_logs_path)
     benchmarks = get_benchmarks_from_both(sim_logs)
@@ -120,18 +155,22 @@ def merge_sim_log_entries():
 
 
 def merge_logfiles(workload_name):
-    file_1 = get_path(logfiles_path, f'{workload_name}.{date_1}.txt')
-    file_2 = get_path(logfiles_path, f'{workload_name}.{date_2}.txt')
-    lines = open(file_1).readlines() + open(file_2).readlines()
+    file_1 = Path(logfiles_path) / f'{workload_name}.{date_1}.txt'
+    file_2 = Path(logfiles_path) / f'{workload_name}.{date_2}.txt'
+    with open(file_1, "r", encoding="utf-8") as f1, open(file_2, "r", encoding="utf-8") as f2:
+        lines = f1.readlines() + f2.readlines()
     for idx, line in enumerate(lines):
         lines[idx] = new_date[-5:].replace('_', ':') + ':00 ' + line[9:]
 
     lines = list(dict.fromkeys(lines))
 
-    os.system(f'rm {file_1} {file_2}')
+    if file_1.exists():
+        file_1.unlink()
+    if file_2.exists():
+        file_2.unlink()
 
-    new_file = os.path.join(logfiles_path, f'{workload_name}.{new_date}.txt')
-    with open(new_file, 'a') as f:
+    new_file = Path(logfiles_path) / f'{workload_name}.{new_date}.txt'
+    with open(new_file, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
 def rename_outfiles():
@@ -211,4 +250,5 @@ def main():
     rename_outfiles()
     print("Update complete")
 
-main()
+if __name__ == "__main__":
+    main()
