@@ -16,3 +16,6 @@ test/
 *.log
 *.err
 *.out
+
+setup_environment.sh
+setup_environment.sh/
