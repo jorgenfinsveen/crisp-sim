@@ -95,9 +95,19 @@ def merge_sim_log_entries():
     with open(os.path.expandvars(sim_logs_path), "r", encoding="utf-8") as f:
         old_logs = dict(yaml.safe_load(f)) or {}
 
-    del old_logs[f'sim-{date_1}']
-    del old_logs[f'sim-{date_2}']
+    keys_to_remove = [f'sim-{date_1}', f'sim-{date_2}']
+    missing_keys = [key for key in keys_to_remove if key not in old_logs]
+    if missing_keys:
+        available_keys = sorted(key for key in old_logs.keys() if str(key).startswith("sim-"))
+        raise KeyError(
+            "Cannot merge experiment dates because the following simulator log entries were not found: "
+            + ", ".join(missing_keys)
+            + ". Available simulator log entries: "
+            + (", ".join(available_keys) if available_keys else "<none>")
+        )
 
+    for key in keys_to_remove:
+        old_logs.pop(key, None)
 
     for k, v in old_logs.items():
         if k != log_name:
