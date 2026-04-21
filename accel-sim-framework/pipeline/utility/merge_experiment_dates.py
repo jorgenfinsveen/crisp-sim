@@ -80,16 +80,6 @@ def merge_sim_log_entries():
     entry = ps.new_sim_log_entry()
     log_name = f'sim-{new_date}'
 
-    # new_entry = {
-    #     'accelsim_commit': commits[0],
-    #     'gpgpusim_commit': commits[1],
-    #     'experiment': experiment_name,
-    #     'date': datetime.strptime(new_date, "%Y_%m_%d__%H_%M").strftime("%Y-%m-%d %H:%M"),
-    #     'configs': configs,
-    #     'benchmarks': benchmarks,
-    #     'results': results
-    # }
-
     entry.accelsim_commit = commits[0]
     entry.gpgpusim_commit = commits[1]
     entry.experiment = experiment_name
