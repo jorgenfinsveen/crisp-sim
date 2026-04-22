@@ -37,6 +37,8 @@ GIT_FILES_CHANGED=`git --git-dir=$ROOT/.git diff --numstat | wc | sed -re 's/^\s
 GIT_FILES_CHANGED+=`git --git-dir=$ROOT/.git diff --numstat --cached | wc | sed -re 's/^\s+([0-9]+).*/\1/'`
 export ACCELSIM_COMMIT="$GIT_COMMIT-modified_$GIT_FILES_CHANGED"
 
+alias launch="python3 -m pipeline.launch"
+
 # Sources
 source_all_environments() {
     GREEN="\e[32m"

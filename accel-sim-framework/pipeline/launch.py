@@ -1,20 +1,6 @@
 #!/usr/bin/env python3
 
-import os
-import yaml
-import argparse
-import importlib.util
-from pathlib import Path
-
-DIR_PATH: Path = Path(__file__).resolve().parent
-SIM_CONFIGS_DIR: Path = os.path.join(DIR_PATH, "configs")
-PIPELINE_CONFIG_FILE: Path = os.path.join(DIR_PATH, "setup", "pipeline.yaml")
-
-PARSER: Path = os.path.join(DIR_PATH, "utility", "parser.py")
-spec = importlib.util.spec_from_file_location("parser", PARSER)
-parser = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(parser)
-
+from . import *
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--run", required=False, help="Run jobs right away?")
@@ -28,7 +14,7 @@ experiment = {}
 
 def parse_pipeline_config():
     global pipeline
-    pipeline = parser.get_pipeline()
+    pipeline = get_pipeline()
     pipeline.trace_lookup = Path(os.path.expandvars(pipeline.trace_lookup))
     for dest in pipeline.config_destinations:
         pipeline.config_destinations[dest] = Path(os.path.expandvars(pipeline.config_destinations[dest]))
@@ -40,19 +26,20 @@ def parse_pipeline_config():
 
 def parse_traces():
     global traces
-    traces = parser.get_traces(pipeline.trace_lookup)
+    traces = get_traces(pipeline.trace_lookup)
     for trace in traces.get_all():
         traces[trace] = os.path.expandvars(traces[trace])
 
 def parse_experiment():
     global experiment
-    experiment = parser.get_experiment(pipeline.experiment.name, pipeline.experiment.path)
+    print(os.path.expandvars(pipeline.experiment.path))
+    experiment = get_experiment(pipeline.experiment.name, os.path.expandvars(pipeline.experiment.path))
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
 
 
 def prepare_instance(instance):
-    src_dir = os.path.join(SIM_CONFIGS_DIR, instance)
+    src_dir = os.path.join(CONFIGURATIONS_ROOT, instance)
     src_config = os.path.join(src_dir, 'gpgpusim.config')
     src_trace = os.path.join(src_dir, 'trace.config')
 
@@ -76,22 +63,14 @@ def prepare_instance(instance):
     os.system(f"rsync -av --exclude='trace.config' '{src_dir}/' '{gpgpusim_target}/'")
     os.system(f"rsync -av '{src_dir}/trace.config' '{trace_target}/'")
 
-
-    cfgs_yml = os.path.expandvars("$ACCEL_SIM/" \
-        "util/job_launching/configs/define-standard-cfgs.yml"
-    )
-
     new_line = f'    base_file: "{gpgpusim_target}/gpgpusim.config"\n'
 
-    with open(cfgs_yml, "r") as f:
-        data = yaml.safe_load(f) or {}
+    with open(STANDARD_CONFIGURATIONS, "r") as f: data = yaml.safe_load(f) or {}
 
     if instance not in data:
-        with open(cfgs_yml, "a") as f:
-            f.write(f"\n\n{instance}:\n{new_line}")
+        with open(STANDARD_CONFIGURATIONS, "a") as f: f.write(f"\n\n{instance}:\n{new_line}")
     else:
-        with open(cfgs_yml, "r") as f:
-            lines = f.readlines()
+        with open(STANDARD_CONFIGURATIONS, "r") as f: lines = f.readlines()
 
         key_line = f"{instance}:"
         for i, line in enumerate(lines[:-1]):
@@ -99,7 +78,7 @@ def prepare_instance(instance):
                 lines[i + 1] = new_line
                 break
 
-        with open(cfgs_yml, "w") as f:
+        with open(STANDARD_CONFIGURATIONS, "w") as f:
             f.writelines(lines)
 
     return True
@@ -113,7 +92,7 @@ def build_command(benchmark, instance=None, aggregate=False):
     instance_configs = ",".join(f"{i}-{extra_configs}" \
         for i in pipeline.instances )if aggregate else f"{instance}-{extra_configs}"
 
-    cmd.append(os.path.expandvars("$ACCEL_SIM/util/job_launching/run_simulations.py"))
+    cmd.append(RUN_SIMULATIONS_SCRIPT)
     cmd.append(f"--override_names {pipeline.override_names}")
     cmd.append(f"--job_mem {pipeline.job_mem}")
     cmd.append(f"--launcher {pipeline.launcher}")
@@ -135,7 +114,7 @@ def build_cache_command():
     result_variables = ",".join(i for i in experiment.results)
 
     cmd = []
-    cmd.append(os.path.expandvars('$ACCEL_SIM/pipeline/utility/cache_launch_data.py'))
+    cmd.append(CACHE_LAUNCH_DATA_SCRIPT)
     cmd.append('--date $launch_date')
     cmd.append(f'--experiment {experiment.name}')
     cmd.append(f'--accelsim_commit {os.getenv("ACCELSIM_COMMIT")}')
@@ -152,9 +131,9 @@ def build_cache_command():
 
 def export_commands(commands, path):
     with open(path, 'w') as f:
-        f.write('#!/usr/bin/env bash\n')
-        f.write('set -euo pipefail\n\n')
-        f.write(f'launch_date=$(date +"%Y_%m_%d__%H_%M")\n\n')
+        f.write(SHEBANG)
+        f.write(PIPEFAIL)
+        f.write(LAUNCH_DATE)
         for command in commands:
             cmd = command[0] + ' \\\n'
             for i in range(1, len(command)):
@@ -173,11 +152,6 @@ def ensure_dirs_present():
 
 def main():
     global pipeline
-    custom_setup_was_run = os.getenv('CUSTOM_SETUP_ENVIRONMENT_WAS_RUN')
-    if not custom_setup_was_run or int(custom_setup_was_run) != 1:
-        path = os.path.join(DIR_PATH.parent, 'setup_environment.sh')
-        if os.path.exists(path):
-            os.system(f'source {path}')
 
     parse_pipeline_config()
     parse_traces()
@@ -212,4 +186,6 @@ def main():
         elif ans.casefold() == 'n'.casefold(): break
         else: print('Invalid input, please write y or n.')
 
-main()
+
+if __name__ == "__main__":
+    main()
