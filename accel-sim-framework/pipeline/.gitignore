@@ -2,6 +2,7 @@
 configs/TEST_*/
 configs/ORIN_*/
 configs/RTX3070_*/
+configs/.*
 
 # Caching.
 __pycache__/
@@ -16,3 +17,5 @@ test/
 *.log
 *.err
 *.out
+
+setup_environment.sh
