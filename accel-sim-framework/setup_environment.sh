@@ -32,6 +32,8 @@ export PATH="$VULKAN_SDK/bin:$CUDA_HOME/bin:${PATH:+$PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$EMBREE_ROOT/lib:$CUDA_HOME/lib64:$VULKAN_SDK/lib"
 
 
+export CRISP_LOCAL="$ACCEL_SIM"
+
 # Sources
 source_all_environments() {
     GREEN="\e[32m"

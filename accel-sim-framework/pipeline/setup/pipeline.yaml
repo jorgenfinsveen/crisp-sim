@@ -29,6 +29,10 @@ experiment:
   name: rendering-4k-local
   path: $ACCEL_SIM/pipeline/setup/experiments.yaml
 
+shared_mode:
+  shared: true
+  root: /cluster/projects/itea_lille-idi-epic-studenter/crisp
+
 
 #Options for collect
 collect:

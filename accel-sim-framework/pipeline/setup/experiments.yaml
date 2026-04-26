@@ -1,4 +1,3 @@
-#crisp-shared-all-render
 rendering_sm_sensitivity:
   params:
     - gpgpu_n_clusters
@@ -16,17 +15,17 @@ rendering_sm_sensitivity:
     - gcstack_com_struct
     - gcstack_tot
   benchmarks:
-    - crisp-shared-all-render:render_passes_2k
-    - crisp-shared-all-render:render_passes_2k_lod0
-    - crisp-shared-all-render:gears_2k
-    - crisp-shared-all-render:instancing_2k
-    - crisp-shared-all-render:pbrtexture_2k
-    - crisp-shared-all-render:tessellation_2k
-  results_dir: /cluster/projects/itea_lille-idi-epic-studenter/crisp
-  logfiles: /cluster/projects/itea_lille-idi-epic-studenter/crisp/logfiles
+    - crisp:render_passes_2k
+    - crisp:render_passes_2k_lod0
+    - crisp:gears_2k
+    - crisp:instancing_2k
+    - crisp:pbrtexture_2k
+    - crisp:tessellation_2k
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
 
 
-rendering-4k-local:
+rendering-4k:
   params:
     - gpgpu_n_clusters
   results:
@@ -43,13 +42,13 @@ rendering-4k-local:
     - gcstack_com_struct
     - gcstack_tot
   benchmarks:
-    - 4K-UHD-local:render_passes
-    - 4K-UHD-local:gears
-    - 4K-UHD-local:instancing
-    - 4K-UHD-local:pbrtexture
-    # - 4K-UHD-local:tessellation
-  results_dir: $ACCEL_SIM/pipeline/results
-  logfiles: $ACCEL_SIM/pipeline/results/logfiles
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    # - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
 
 clusters_vs_cpi:
   params:
@@ -57,13 +56,13 @@ clusters_vs_cpi:
   results:
     - gpgpu_n_clusters
   benchmarks:
-    - crisp-shared-extended:render_passes_2k
-    - crisp-shared-extended:klt_tracker
-    - crisp-shared-extended:vpi_sample_03_harris_corners
-    - crisp-shared-extended:vpi_sample_11_fisheye
-    - crisp-shared-extended:vpi_sample_12_optflow_lk_refined
-  results_dir: /cluster/projects/itea_lille-idi-epic-studenter/crisp
-  logfiles: /cluster/projects/itea_lille-idi-epic-studenter/crisp/logfiles
+    - crisp:render_passes_2k
+    - crisp:klt_tracker
+    - crisp:vpi_sample_03_harris_corners
+    - crisp:vpi_sample_11_fisheye
+    - crisp:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
 
 
 debugging-short:
@@ -73,18 +72,8 @@ debugging-short:
     - gpu_cpi
   benchmarks:
     - pipeline:minitrace
-  results_dir: $ACCEL_SIM/pipeline/results
-  logfiles: $ACCEL_SIM/pipeline/results/logfiles
-
-debugging-short-shared:
-  params:
-    - gpgpu_n_clusters
-  results:
-    - gpu_cpi
-  benchmarks:
-    - pipeline:minitrace
-  results_dir: /cluster/projects/itea_lille-idi-epic-studenter/crisp
-  logfiles: /cluster/projects/itea_lille-idi-epic-studenter/crisp/logfiles
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
 
 
 debugging-long:
@@ -93,17 +82,17 @@ debugging-long:
   results:
     - gpu_cpi
   benchmarks:
-    - crisp-shared-extended:render_passes_2k
-    - crisp-shared-extended:klt_tracker
-    #- crisp-shared-extended:vpi_sample_03_harris_corners
-    - crisp-shared-extended:vpi_sample_11_fisheye
-    #- crisp-shared-extended:vpi_sample_12_optflow_lk_refined
-    - crisp-shared-extended:render_passes_2k_lod0
-  results_dir: $ACCEL_SIM/pipeline/results
-  logfiles: $ACCEL_SIM/pipeline/results/logfiles
+    - crisp:render_passes_2k
+    - crisp:klt_tracker
+    #- crisp:vpi_sample_03_harris_corners
+    - crisp:vpi_sample_11_fisheye
+    #- crisp:vpi_sample_12_optflow_lk_refined
+    - crisp:render_passes_2k_lod0
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
 
 
-all-render-benchmarks-local:
+render_QHD:
   params:
     - gpgpu_n_clusters
   results:
@@ -115,5 +104,5 @@ all-render-benchmarks-local:
     - crisp-local:instancing_2k
     - crisp-local:pbrtexture_2k
     - crisp-local:tessellation_2k
-  results_dir: $ACCEL_SIM/pipeline/results
-  logfiles: $ACCEL_SIM/pipeline/results/logfiles
+  results_dir: $RESULT_ROOT/results
+  logfiles: $RESULT_ROOT/logfiles

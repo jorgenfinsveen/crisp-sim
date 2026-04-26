@@ -1,6 +1,7 @@
-crisp-shared: /cluster/projects/itea_lille-idi-epic-studenter/crisp/hw_run/traces/vulkan/
-crisp-local: $ACCEL_SIM/hw_run/traces/vulkan/
-pipeline: /cluster/projects/itea_lille-idi-epic-studenter/crisp/hw_run/traces/vulkan/ #$ACCEL_SIM/pipeline/
-crisp-shared-extended: $ACCEL_SIM/hw_run/traces/vulkan/
-crisp-shared-all-render: /cluster/projects/itea_lille-idi-epic-studenter/crisp/hw_run/traces/vulkan/
-4K-UHD-local: $ACCEL_SIM/traces/graphics/4K-UHD
+480p: $ACTIVE_ROOT/traces/graphics/480p
+QHD: $ACTIVE_ROOT/traces/graphics/QHD
+4K-UHD: $ACTIVE_ROOT/traces/graphics/4K-UHD
+artifact-merged: $ACTIVE_ROOT/hw_run/traces/vulkan/
+artifact-separate: $ACTIVE_ROOT/hw_run/traces/vulkan/
+crisp: $ACTIVE_ROOT/hw_run/traces/vulkan/
+pipeline: $ACTIVE_ROOT/hw_run/traces/vulkan/

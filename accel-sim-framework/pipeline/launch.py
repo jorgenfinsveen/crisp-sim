@@ -69,7 +69,7 @@ def prepare_instance(instance):
 
     dest = pipeline.config_destinations
     os.system(f"mkdir -p {Path(dest.gpgpusim)} {Path(dest.trace)}")
-    
+
     gpgpusim_target = os.path.join(dest.gpgpusim, instance)
     trace_target = os.path.join(dest.trace, instance)
 
