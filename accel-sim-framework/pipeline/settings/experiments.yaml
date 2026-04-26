@@ -1,0 +1,108 @@
+rendering_sm_sensitivity:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - crisp:render_passes_2k
+    - crisp:render_passes_2k_lod0
+    - crisp:gears_2k
+    - crisp:instancing_2k
+    - crisp:pbrtexture_2k
+    - crisp:tessellation_2k
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+rendering-4k:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+clusters_vs_cpi:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - crisp:render_passes_2k
+    - crisp:klt_tracker
+    - crisp:vpi_sample_03_harris_corners
+    - crisp:vpi_sample_11_fisheye
+    - crisp:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+debugging-short:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpu_cpi
+  benchmarks:
+    - pipeline:minitrace
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+debugging-long:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpu_cpi
+  benchmarks:
+    - crisp:render_passes_2k
+    - crisp:klt_tracker
+    #- crisp:vpi_sample_03_harris_corners
+    - crisp:vpi_sample_11_fisheye
+    #- crisp:vpi_sample_12_optflow_lk_refined
+    - crisp:render_passes_2k_lod0
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+render_QHD:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpu_cpi
+  benchmarks:
+    - crisp-local:render_passes_2k
+    - crisp-local:render_passes_2k_lod0
+    - crisp-local:gears_2k
+    - crisp-local:instancing_2k
+    - crisp-local:pbrtexture_2k
+    - crisp-local:tessellation_2k
+  results_dir: $RESULT_ROOT/results
+  logfiles: $RESULT_ROOT/logfiles

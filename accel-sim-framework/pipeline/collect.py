@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
-import os
-import argparse
-from pathlib import Path
-from datetime import datetime
 
-import utility.parser as ps
-
-DIR_PATH = Path(__file__).resolve().parent
-PIPELINE_CONFIG_FILE = os.path.join(DIR_PATH, "setup", "pipeline.yaml")
+from . import *
 
 pipeline = {}
 experiment = {}
@@ -17,16 +10,27 @@ parser.add_argument("--date", required=False, help="Date of the run to collect [
 parser.add_argument("--experiment", required=False, help="Name of an experiment to get the latest run from.")
 args = parser.parse_args()
 
+def set_env():
+    if pipeline.shared_mode.shared:
+        active_root = os.path.expandvars(pipeline.shared_mode.root)
+        result_root = os.path.expandvars(pipeline.shared_mode.results_root)
+    else:
+        active_root = os.getenv('CRISP_LOCAL')
+        result_root = os.path.join(os.getenv('CRISP_LOCAL'), 'pipeline', 'results')
+    os.environ['RESULT_ROOT'] = result_root
+    os.environ['ACTIVE_ROOT'] = active_root
+
 
 def parse_pipeline_config():
     global pipeline
-    pipeline = ps.get_pipeline(PIPELINE_CONFIG_FILE)
+    pipeline = get_pipeline(PIPELINE_CONFIG)
+    set_env()
 
 
 def parse_experiment(name):
     global experiment
     name = name if name else pipeline.experiment.name
-    experiment = ps.get_experiment(name, pipeline.experiment.path)
+    experiment = get_experiment(name, pipeline.experiment.path)
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
 
@@ -37,33 +41,35 @@ def main():
     parse_experiment(args.experiment)
     if not args.date:
         path = os.path.join(experiment.results_dir, 'output', 'simulator_logs.yaml')
-        sim_logs = ps.get_simulator_logs(path)
+        sim_logs = get_simulator_logs(path)
         exp_name = args.experiment.strip() if args.experiment else ""
         log = sim_logs.get_latest(exp_name)
-        run_id = datetime.strptime(log.date, "%Y-%m-%d %H:%M").strftime("%Y_%m_%d__%H_%M")
+        run_id = convert_date(log.date, "default", "underscore")
         substr = f"results from {exp_name}" if exp_name != "" else ""
         print(f"Latest {substr}: sim-{run_id}")
     else:
         run_id = args.date.strip()
-    
+
 
     output_dir = os.path.join(experiment.results_dir, "output", experiment.name)
     export_dir = os.path.join(experiment.results_dir, "export", "total")
 
     export_csv = os.path.join(export_dir, f"{run_id}.csv")
-    executable = os.path.join(DIR_PATH.parent, "util", "job_launching", "get_stats.py")
+    executable = os.path.join(GET_STATS_SCRIPT)
 
     benchmarks = ",".join(experiment.benchmarks)
     configs = ",".join(pipeline.instances)
 
     lines = []
-    lines.append("#!/usr/bin/env bash")
-    lines.append("set -euo pipefail\n")
+    lines.append(SHEBANG)
+    lines.append(PIPEFAIL)
 
+    lines.append(f'(cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory {experiment.results_dir})\n')
+    
     lines.append(f'mkdir -p {export_dir}\n')
 
+
     lines.append(f'{executable} \\')
-    #lines.append('\t-A \\')
     lines.append('\t-k \\')
     lines.append('\t-R \\')
     lines.append('\t-o True \\')
@@ -81,15 +87,15 @@ def main():
             f.write(f"{line}\n")
 
 
-    os.system(f"chmod +x {export_sh}")
+    subprocess.run(['chmod', '+x', export_sh])
 
     print(f"Wrote: {export_sh}")
     ans = input("Run it now? [y/N]: ").strip().lower()
     if ans == "y":
-        os.system(f'bash {export_sh}')
+        subprocess.run(['bash', export_sh])
     run_csv_generator = input("Run csv generator for the test result? [y/N]: ")
     if run_csv_generator == "y":
-        os.system(f'./utility/collect-csv.py')
+        subprocess.run(CALL_COLLECT_CSV_SCRIPT)
 
 if __name__ == "__main__":
     main()

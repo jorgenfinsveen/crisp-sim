@@ -31,6 +31,21 @@ export VULKAN_SDK="$HOME/opt/vulkansdk/current/x86_64"
 export PATH="$VULKAN_SDK/bin:$CUDA_HOME/bin:${PATH:+$PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$EMBREE_ROOT/lib:$CUDA_HOME/lib64:$VULKAN_SDK/lib"
 
+# Accel-Sim git-hash
+GIT_COMMIT=`git --git-dir=$ROOT/.git log --abbrev-commit -n 1 | head -1 | sed -re 's/commit (.*)/\1/'`
+GIT_FILES_CHANGED=`git --git-dir=$ROOT/.git diff --numstat | wc | sed -re 's/^\s+([0-9]+).*/\1./'`
+GIT_FILES_CHANGED+=`git --git-dir=$ROOT/.git diff --numstat --cached | wc | sed -re 's/^\s+([0-9]+).*/\1/'`
+export ACCELSIM_COMMIT="$GIT_COMMIT-modified_$GIT_FILES_CHANGED"
+
+alias launch="(cd $ACCEL_SIM && python3 -m pipeline.launch)"
+alias collect="(cd $ACCEL_SIM && python3 -m pipeline.collect)"
+
+cache_add() {
+    (cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory $1)
+}
+
+
+export CRISP_LOCAL="$ACCEL_SIM"
 
 # Sources
 source_all_environments() {

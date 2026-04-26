@@ -1,0 +1,58 @@
+name_prefix: sim
+
+
+instances:
+  - ORIN_2D
+  - ORIN_1D
+  - BASELINE_ORIN
+  - ORIN_1U
+  - ORIN_2U
+
+  # - RTX3070_D2
+  # - RTX3070_D1
+  # - BASELINE_RTX3070
+  # - RTX3070_1
+  # - RTX3070_2
+
+
+
+
+experiment:
+  name: rendering-4k
+  path: $ACCEL_SIM/pipeline/settings/experiments.yaml
+
+shared_mode:
+  shared: true
+  root: /cluster/projects/itea_lille-idi-epic-studenter/crisp
+  results_root: /cluster/projects/itea_lille-idi-epic-studenter/crisp
+
+
+#Options for collect
+collect:
+  detailed: true
+  metric: gcstack_base
+
+
+launcher: idun
+override_names: true
+aggregate: true
+
+
+# For Slurm jobs.
+# See more configuration-options in accel-sim-framework/util/job_launching/idun.yaml.
+job_mem: 64G # Default is 4G, but this turned out to be insufficient for the workloads in the artifact.
+
+
+extra_configs:
+  - SASS
+  - concurrent
+  - fg
+  - VISUAL
+
+
+trace_lookup: $ACCEL_SIM/pipeline/settings/traces.yaml
+
+
+config_destinations:
+  gpgpusim: $ACCEL_SIM/gpu-simulator/gpgpu-sim/configs/custom-cfgs
+  trace: $ACCEL_SIM/gpu-simulator/configs/custom-cfgs

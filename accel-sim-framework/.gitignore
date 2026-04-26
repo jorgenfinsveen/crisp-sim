@@ -19,3 +19,4 @@ spl_vio.tar.gz
 *.log
 *.err
 *.out
+traces/

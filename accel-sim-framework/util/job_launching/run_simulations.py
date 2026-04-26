@@ -59,11 +59,11 @@ def extract_version( exec_path, simulator):
     regex_str = r".*({0}[^\s^']+).*".format(regex_base)
     strings_process = Popen(['strings', exec_path], stdout=PIPE)
     grep_process = Popen(['grep', regex_base], stdin=strings_process.stdout, stdout=PIPE)
-    strings_process.stdout.close() 
+    strings_process.stdout.close()
     out, err = grep_process.communicate()
     version = re.sub(regex_str, r"\1", str(out.rstrip()))
     return version
- 
+
 #######################################################################################
 # Class the represents each configuration you are going to run
 # For example, if your sweep file has 2 entries 32k-L1 and 64k-L1 there will be 2
@@ -110,7 +110,7 @@ class ConfigurationSpec:
             for argmap in self.command_line_args_list:
                 args = argmap["args"]
                 mem_usage = argmap["accel-sim-mem"]
-                appargs_run_subdir = os.path.join( 
+                appargs_run_subdir = os.path.join(
                     benchmark.replace('/','_'),
                     self.benchmark_args_subdirs[args])
                 this_run_dir = os.path.join( run_directory, appargs_run_subdir, self.run_subdir.split('-')[0] )
@@ -125,7 +125,7 @@ class ConfigurationSpec:
                     full_exec_dir,build_handle,
                     mem_usage)
                 self.append_gpgpusim_config(benchmark, this_run_dir, appargs_run_subdir, self.config_file)
-                
+
                 # Submit the job to torque and dump the output to a file
                 if not options.no_launch:
                     torque_out_filename = this_directory + "torque_out.{0}.txt".format(os.getpid())
@@ -211,7 +211,7 @@ class ConfigurationSpec:
             if os.path.isfile(new_file):
                 os.remove(new_file)
             shutil.copyfile(file_to_cp,new_file)
-        
+
         # link the data directory
         benchmark_data_dir = os.path.join(full_data_dir, "data")
         if os.path.isdir(benchmark_data_dir):
@@ -271,7 +271,7 @@ class ConfigurationSpec:
 
         # Test the existance of required env variables
         if str(os.getenv("GPGPUSIM_ROOT")) == "None":
-            exit("\nERROR - Specify GPGPUSIM_ROOT prior to running this script") 
+            exit("\nERROR - Specify GPGPUSIM_ROOT prior to running this script")
         if str(os.getenv("OPENCL_REMOTE_GPU_HOST")) == "None":
             os.environ["OPENCL_REMOTE_GPU_HOST"] = ""
         if str(os.getenv("GPGPUSIM_CONFIG")) == "None":
@@ -303,7 +303,7 @@ class ConfigurationSpec:
             """
              if "MAIL_USER" in idun_overrides:
                 mail_user_components = idun_overrides["MAIL_USER"].split("@")
-                idun_overrides["MAIL_USER"] = f"{os.getenv(mail_user_components[0])}@{mail_user_components[1]}" 
+                idun_overrides["MAIL_USER"] = f"{os.getenv(mail_user_components[0])}@{mail_user_components[1]}"
             """
         slurm_name_var=benchmark + "-" + self.benchmark_args_subdirs[command_line_args] + "." +\
                                 gpgpusim_build_handle
@@ -348,16 +348,6 @@ class ConfigurationSpec:
                 torque_text = re.sub(prefix + entry,
                                     str(replacement_dict[entry]),
                                     torque_text)
-        if options.override_names:
-            if os.path.exists(os.path.join(this_directory + "post.sim")):
-                os.remove(os.path.join(this_directory + "post.sim"))
-            post_text = open(this_directory + "post-template.sim").read().strip()
-            for entry in replacement_dict:
-                for prefix in ["REPLACE_", "IDUN_"]:
-                    post_text = re.sub(prefix + entry,
-                        str(replacement_dict[entry]),
-                        post_text)
-            open(os.path.join(this_directory, "post.sim"), 'x').write(post_text)
 
         open(os.path.join(this_run_dir , job_template), 'w').write(torque_text)
         exec_line = torque_text.splitlines()[-1]
@@ -490,25 +480,6 @@ job_ids = []
 for config in configurations:
     config.my_print()
     job_ids += config.run(version_string, benchmarks, options.run_directory, cuda_version, options.simulator_dir)
-
-if options.override_names:
-    dependency = "--dependency=after:"
-    exports = "--export=EXPORTED_JOB_IDS="
-    template = os.path.join(Path(__file__).resolve().parent, "post.sim")
-    for id in job_ids:
-        dependency += str(id)
-        exports += f"{id}_"
-
-    post_text = open(os.path.join(template)).readlines()
-    post_sim_dest_dir = os.path.join(options.run_directory, ".post_sim")
-    post_sim_dest_file = os.path.join(post_sim_dest_dir, "post.sim")
-
-    os.makedirs(post_sim_dest_dir, exist_ok=True)
-    if os.path.exists(post_sim_dest_file): os.system(f"rm {post_sim_dest_file}")
-    open(post_sim_dest_file, 'x').writelines(post_text)
-
-    if subprocess.call([job_submit_call, dependency, exports[:-1], template]) < 0:
-        exit("Error launching post-job.")
 
 
 if "procman" in job_submit_call and not options.no_launch:

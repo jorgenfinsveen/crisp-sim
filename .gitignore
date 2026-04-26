@@ -12,3 +12,5 @@ __pycache__/
 *.swp
 *.swo
 crisp_results
+notes.md
+notes/
