@@ -3,6 +3,7 @@
 import os
 import json
 import argparse
+import subprocess
 from pathlib import Path
 from ..tools.parser import *
 from ..model.simlog import *
@@ -125,6 +126,7 @@ def add_to_logs(cache: Path):
 def main():
     for cache in CACHE.glob("*.json"):
         add_to_logs(cache)
+        subprocess.run(["rm", cache])
 
 if __name__ == "__main__":
     main()

@@ -2,32 +2,24 @@ name_prefix: sim
 
 
 instances:
-  #- ORIN_2D
-  #- ORIN_1D
-  #- BASELINE_ORIN
-  #- ORIN_1U
-  #- ORIN_2U
-  - BASELINE_RTX3070
-  # - ORIN_1
-  # - ORIN_2
-  # - ORIN_3
-  # - ORIN_2s
-  # - ORIN_3s
-  # - ORIN_4
-  # - ORIN_5
-  - RTX3070_1
-  - RTX3070_2
-  - RTX3070_D1
-  - RTX3070_D2
-  # - RTX3070_3
-  # - RTX3070_4
-  # - RTX3070_5
+  - ORIN_2D
+  - ORIN_1D
+  - BASELINE_ORIN
+  - ORIN_1U
+  - ORIN_2U
+
+  # - RTX3070_D2
+  # - RTX3070_D1
+  # - BASELINE_RTX3070
+  # - RTX3070_1
+  # - RTX3070_2
+
 
 
 
 experiment:
-  name: rendering-4k-local
-  path: $ACCEL_SIM/pipeline/setup/experiments.yaml
+  name: rendering-4k
+  path: $ACCEL_SIM/pipeline/settings/experiments.yaml
 
 shared_mode:
   shared: true
@@ -58,7 +50,7 @@ extra_configs:
   - VISUAL
 
 
-trace_lookup: $ACCEL_SIM/pipeline/setup/traces.yaml
+trace_lookup: $ACCEL_SIM/pipeline/settings/traces.yaml
 
 
 config_destinations:

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import sys
 import csv
@@ -10,7 +11,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pathlib import Path
-from __future__ import annotations
 from ..tools.parser import *
 from ..tools.kernel_handler import KernelHandler
 from collections import defaultdict, OrderedDict

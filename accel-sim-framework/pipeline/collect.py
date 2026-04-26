@@ -17,8 +17,8 @@ def set_env():
     else:
         active_root = os.getenv('CRISP_LOCAL')
         result_root = os.path.join(os.getenv('CRISP_LOCAL'), 'pipeline', 'results')
-    subprocess.run(['export', f'RESULT_ROOT={result_root}'])
-    subprocess.run(['export', f'ACTIVE_ROOT={active_root}'])
+    os.environ['RESULT_ROOT'] = result_root
+    os.environ['ACTIVE_ROOT'] = active_root
 
 
 def parse_pipeline_config():
@@ -64,7 +64,10 @@ def main():
     lines.append(SHEBANG)
     lines.append(PIPEFAIL)
 
+    lines.append(f'(cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory {experiment.results_dir})\n')
+    
     lines.append(f'mkdir -p {export_dir}\n')
+
 
     lines.append(f'{executable} \\')
     lines.append('\t-k \\')

@@ -46,7 +46,7 @@ rendering-4k:
     - 4K-UHD:gears
     - 4K-UHD:instancing
     - 4K-UHD:pbrtexture
-    # - 4K-UHD:tessellation
+    - 4K-UHD:tessellation
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
 

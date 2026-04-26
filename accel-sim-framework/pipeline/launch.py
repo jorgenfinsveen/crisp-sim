@@ -20,8 +20,8 @@ def set_env():
     else:
         active_root = os.getenv('CRISP_LOCAL')
         result_root = os.path.join(active_root, 'pipeline', 'results')
-    subprocess.run(['export', f'RESULT_ROOT={result_root}'])
-    subprocess.run(['export', f'ACTIVE_ROOT={active_root}'])
+    os.environ['RESULT_ROOT'] = result_root
+    os.environ['ACTIVE_ROOT'] = active_root
 
 
 

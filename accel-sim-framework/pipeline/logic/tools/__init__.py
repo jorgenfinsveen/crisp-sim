@@ -27,7 +27,7 @@ from typing import OrderedDict, defaultdict, Iterable, Optional
 
 ROOT: Path = Path(os.path.expandvars('$ACCEL_SIM'))
 PIPELINE_ROOT: Path = Path(os.path.join(ROOT, 'pipeline'))
-PIPELINE_CONFIG: Path = os.path.join(PIPELINE_ROOT, 'setup', 'pipeline.yaml')
+PIPELINE_CONFIG: Path = os.path.join(PIPELINE_ROOT, 'settings', 'pipeline.yaml')
 
 DASH_RE = re.compile(r"^-{5,}\s*,*")
 CONFIG_LINE_RE = re.compile(r"^(?P<gpu>[^;]+);;(?P<kv>[^=]+)=(?P<val>.+)$")
