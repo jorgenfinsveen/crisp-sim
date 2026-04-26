@@ -2,6 +2,7 @@
 configs/TEST_*/
 configs/ORIN_*/
 configs/RTX3070_*/
+configs/.*
 
 # Caching.
 __pycache__/
