@@ -1,36 +1,24 @@
 #!/usr/bin/env python3
-from __future__ import annotations
 
-# Todo: Her kan vi lage kode for å lese csv- og visualizer-fil for å generere plots 
+from . import *
+
+# Todo: Her kan vi lage kode for å lese csv- og visualizer-fil for å generere plots
 # Todo: Det er mulig vi er interessert i andre plots enn det som allerede finnes av plottescripts
-# Todo: Det kan også være en idé å lage noe som trekker ut et gitt sett med verdier fra de forskjellige resultat-filene 
+# Todo: Det kan også være en idé å lage noe som trekker ut et gitt sett med verdier fra de forskjellige resultat-filene
 # Todo: ... og sammenligner hvilket som oppnådde best IPC, og deretter lagrer disse tallene + konfigurasjonen som ble brukt
 # Todo: ... Det ville være gull verdt når vi gjør design-sweepinga!
-from pathlib import Path
-import os
-import sys
-import argparse
-import utility.parser as ps
 
-
-
-#Importing functions for plotting
-from utility.plots.bar_chart import bar_chart
-from utility.plots.stacked_bar_chart import stacked_bar_chart
-
-PIPELINE_ROOT = Path(__file__).resolve().parent
-PIPELINE_YAML = os.path.join(PIPELINE_ROOT, "setup", "pipeline.yaml")
 
 pipeline = {}
 experiment = {}
 
 def parse_pipeline_config():
     global pipeline
-    pipeline = ps.get_pipeline(PIPELINE_YAML)
+    pipeline = get_pipeline(PIPELINE_CONFIG)
 
 def parse_experiment():
     global experiment
-    experiment = ps.get_experiment(pipeline.experiment.name, pipeline.experiment.path)
+    experiment = get_experiment(pipeline.experiment.name, pipeline.experiment.path)
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
 
@@ -42,7 +30,7 @@ def find_file(root: Path, filename: str) -> Path | None:
 
 def load_metric_metric() -> str:
     metric = pipeline.collect.metric
-    if not metric: 
+    if not metric:
         raise SystemExit("pipeline.yaml missing experiment.name")
     return metric
 
@@ -55,7 +43,7 @@ def find_experiment_csvs(metric_metric: str) -> list[Path]:
 def default_run():
     #metric_metric = load_metric_metric()
     global pipeline
-    pipeline = ps.get_pipeline(PIPELINE_YAML)
+    pipeline = get_pipeline(PIPELINE_CONFIG)
     exp_name = pipeline.experiment.name
     print(exp_name)
     csvs = find_experiment_csvs(exp_name)
@@ -86,10 +74,10 @@ def run_stacked_bar_charts_for_csvs(csv_paths: list[Path]):
 
     for csv_path in csv_paths:
         try:
-            stacked_bar_chart(str(csv_path))
+            create_staked_bar_chart(str(csv_path))
             print(f"plotted: {csv_path}")
         except TypeError:
-            stacked_bar_chart(str(csv_path))
+            create_staked_bar_chart(str(csv_path))
             print(f"plotted: {csv_path}")
 
 
@@ -105,27 +93,27 @@ def menu():
     choice = input("Choose a plot type: ").strip()
     if not choice.isdigit() or int(choice) not in plots:
         print("Invalid choice")
-        sys.exit(1)
+        exit(1)
 
     query = input("Experiment to match: ").strip()
     if not query:
         print("No input was provided.")
-        sys.exit(1)
+        exit(1)
     if "/" in query or "\\" in query:
         print("Please provide only a filename or prefix (no paths).")
-        sys.exit(1)
+        exit(1)
 
     if query.lower().endswith(".csv"):
         csv_path = find_file(PIPELINE_ROOT, query)
         if csv_path is None:
             print(f"Didn't find a file named: {query}")
-            sys.exit(1)
+            exit(1)
         csvs = [csv_path]
     else:
         csvs = sorted([p for p in PIPELINE_ROOT.rglob(f"*{query}*.csv") if p.is_file()])
         if not csvs:
             print(f"No CSV files found matching: {query}")
-            sys.exit(1)
+            exit(1)
 
     plot_name, plot_func = plots[int(choice)]
 
