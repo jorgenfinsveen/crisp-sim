@@ -25,6 +25,32 @@ rendering_sm_sensitivity:
   results_dir: /cluster/projects/itea_lille-idi-epic-studenter/crisp
   logfiles: /cluster/projects/itea_lille-idi-epic-studenter/crisp/logfiles
 
+
+rendering-4k-local:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD-local:render_passes
+    - 4K-UHD-local:gears
+    - 4K-UHD-local:instancing
+    - 4K-UHD-local:pbrtexture
+    # - 4K-UHD-local:tessellation
+  results_dir: $ACCEL_SIM/pipeline/results
+  logfiles: $ACCEL_SIM/pipeline/results/logfiles
+
 clusters_vs_cpi:
   params:
     - gpgpu_n_clusters
@@ -49,6 +75,16 @@ debugging-short:
     - pipeline:minitrace
   results_dir: $ACCEL_SIM/pipeline/results
   logfiles: $ACCEL_SIM/pipeline/results/logfiles
+
+debugging-short-shared:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpu_cpi
+  benchmarks:
+    - pipeline:minitrace
+  results_dir: /cluster/projects/itea_lille-idi-epic-studenter/crisp
+  logfiles: /cluster/projects/itea_lille-idi-epic-studenter/crisp/logfiles
 
 
 debugging-long:

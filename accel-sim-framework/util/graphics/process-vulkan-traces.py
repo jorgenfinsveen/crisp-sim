@@ -13,6 +13,8 @@ parser.add_argument("--dest", required=False, help="Path to the destination dire
 args = parser.parse_args()
 
 app = args.app.strip()
+if ".traceg" in app:
+    app = app[:-7]
 
 if args.src:
     file = Path(f"{args.src}/{app}.traceg")

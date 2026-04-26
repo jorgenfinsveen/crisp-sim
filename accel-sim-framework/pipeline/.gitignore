@@ -16,3 +16,6 @@ test/
 *.log
 *.err
 *.out
+
+# Symlinks
+setup_environment.sh
