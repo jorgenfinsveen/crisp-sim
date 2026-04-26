@@ -10,10 +10,21 @@ parser.add_argument("--date", required=False, help="Date of the run to collect [
 parser.add_argument("--experiment", required=False, help="Name of an experiment to get the latest run from.")
 args = parser.parse_args()
 
+def set_env():
+    if pipeline.shared_mode.shared:
+        active_root = os.path.expandvars(pipeline.shared_mode.root)
+        result_root = os.path.expandvars(pipeline.shared_mode.results_root)
+    else:
+        active_root = os.getenv('CRISP_LOCAL')
+        result_root = os.path.join(os.getenv('CRISP_LOCAL'), 'pipeline', 'results')
+    subprocess.run(['export', f'RESULT_ROOT={result_root}'])
+    subprocess.run(['export', f'ACTIVE_ROOT={active_root}'])
+
 
 def parse_pipeline_config():
     global pipeline
     pipeline = get_pipeline(PIPELINE_CONFIG)
+    set_env()
 
 
 def parse_experiment(name):
@@ -73,15 +84,15 @@ def main():
             f.write(f"{line}\n")
 
 
-    os.system(f"chmod +x {export_sh}")
+    subprocess.run(['chmod', '+x', export_sh])
 
     print(f"Wrote: {export_sh}")
     ans = input("Run it now? [y/N]: ").strip().lower()
     if ans == "y":
-        os.system(f'bash {export_sh}')
+        subprocess.run(['bash', export_sh])
     run_csv_generator = input("Run csv generator for the test result? [y/N]: ")
     if run_csv_generator == "y":
-        os.system(CALL_COLLECT_CSV_SCRIPT)
+        subprocess.run(CALL_COLLECT_CSV_SCRIPT)
 
 if __name__ == "__main__":
     main()

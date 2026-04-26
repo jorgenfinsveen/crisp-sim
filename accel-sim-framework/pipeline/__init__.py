@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 from __future__ import annotations
 from .logic.tools.parser import *
@@ -19,7 +20,7 @@ STANDARD_CONFIGURATIONS: Path   = os.path.join(JOB_LAUNCHING_DIR, 'configs', 'de
 PIPELINE_LOGIC_DIR: Path      = os.path.join(PIPELINE_ROOT, 'logic')
 CACHE_LAUNCH_DATA_SCRIPT: Path  = os.path.join(PIPELINE_LOGIC_DIR, 'cache', 'cache_launch_data.py')
 
-CALL_COLLECT_CSV_SCRIPT: str = 'python3 -m logic.tools.collect-csv'
+CALL_COLLECT_CSV_SCRIPT: str = ['python3', '-m', 'logic.tools.collect-csv']
 
 SHEBANG: str = '#!/usr/bin/env bash\n'
 PIPEFAIL: str = 'set -euo pipefail\n'

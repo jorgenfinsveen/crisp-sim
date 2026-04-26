@@ -22,6 +22,7 @@ date = ""
 experiment = ""
 experiment_dir: Path = ""
 
+
 def build_configs() -> dict:
     configs = []
     for gpu in data["configurations"]:

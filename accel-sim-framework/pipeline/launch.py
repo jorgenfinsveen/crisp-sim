@@ -12,6 +12,19 @@ pipeline = {}
 traces = {}
 experiment = {}
 
+
+def set_env():
+    if pipeline.shared_mode.shared:
+        active_root = os.path.expandvars(pipeline.shared_mode.root)
+        result_root = os.path.expandvars(pipeline.shared_mode.results_root)
+    else:
+        active_root = os.getenv('CRISP_LOCAL')
+        result_root = os.path.join(active_root, 'pipeline', 'results')
+    subprocess.run(['export', f'RESULT_ROOT={result_root}'])
+    subprocess.run(['export', f'ACTIVE_ROOT={active_root}'])
+
+
+
 def parse_pipeline_config():
     global pipeline
     pipeline = get_pipeline()
@@ -22,6 +35,8 @@ def parse_pipeline_config():
     for instance in pipeline.instances:
         arr.append(instance.replace("-", "_"))
     pipeline.instances = arr
+    set_env()
+
 
 
 def parse_traces():
@@ -32,10 +47,10 @@ def parse_traces():
 
 def parse_experiment():
     global experiment
-    print(os.path.expandvars(pipeline.experiment.path))
     experiment = get_experiment(pipeline.experiment.name, os.path.expandvars(pipeline.experiment.path))
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
+
 
 
 def prepare_instance(instance):
@@ -55,13 +70,13 @@ def prepare_instance(instance):
             return False
 
     dest = pipeline.config_destinations
-    os.system(f"mkdir -p {Path(dest.gpgpusim)} {Path(dest.trace)}")
+    subprocess.run(['mkdir', '-p', dest.gpgpusim, dest.trace])
 
     gpgpusim_target = os.path.join(dest.gpgpusim, instance)
     trace_target = os.path.join(dest.trace, instance)
 
-    os.system(f"rsync -av --exclude='trace.config' '{src_dir}/' '{gpgpusim_target}/'")
-    os.system(f"rsync -av '{src_dir}/trace.config' '{trace_target}/'")
+    subprocess.run(['rsync', '-av', '--exclude="trace.config"', f'{src_dir}/', f'{gpgpusim_target}/'])
+    subprocess.run(['rsync', '-av', f'{src_dir}/trace.config', f'{trace_target}/'])
 
     new_line = f'    base_file: "{gpgpusim_target}/gpgpusim.config"\n'
 
@@ -172,17 +187,17 @@ def main():
 
     export_path = os.path.join(experiment.results_dir, 'launch.sh')
     export_commands(commands, export_path)
-    os.system(f"chmod +x {export_path}")
+    subprocess.run(['chmod', '+x', export_path])
 
     print(f'\n\nScript to start simulator-instances written to: \n - {export_path}')
 
     if (args.run):
-        os.system(f'bash {export_path}')
+        subprocess.run(['bash', export_path])
         return
 
     while True:
         ans = input('\nStart instances now (y/n): ').strip()
-        if ans.casefold() == 'y'.casefold(): os.system(f'bash {export_path}'); break
+        if ans.casefold() == 'y'.casefold(): subprocess.run(['bash', export_path]); break
         elif ans.casefold() == 'n'.casefold(): break
         else: print('Invalid input, please write y or n.')
 

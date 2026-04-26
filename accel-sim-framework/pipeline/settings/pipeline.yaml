@@ -32,6 +32,7 @@ experiment:
 shared_mode:
   shared: true
   root: /cluster/projects/itea_lille-idi-epic-studenter/crisp
+  results_root: /cluster/projects/itea_lille-idi-epic-studenter/crisp
 
 
 #Options for collect
