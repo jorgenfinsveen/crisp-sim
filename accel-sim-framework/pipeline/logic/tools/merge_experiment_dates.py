@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from . import *
-from parser import *
+from .parser import *
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--exp",      required=True, help="Name of the experiment.")

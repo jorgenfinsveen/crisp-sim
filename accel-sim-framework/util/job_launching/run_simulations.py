@@ -164,7 +164,7 @@ class ConfigurationSpec:
                         log_name = "sim_log.{0}".format(options.launch_name)
                         path = this_directory + "logfiles/"+ log_name + "." + day_string + ".txt"
                         if options.override_names:
-                            path = this_directory + "logfiles/"+ str(benchmark) + ".{0}".format(global_timestamp) + ".txt"
+                            path = options.logfile_dir_dest + "/" + str(benchmark) + ".{0}".format(global_timestamp) + ".txt"
                             logfile = open(path, 'a')
                             print("%s %6s %-22s %-100s %-25s %s" %\
                                ( time_string ,\
@@ -174,10 +174,10 @@ class ConfigurationSpec:
                                self.run_subdir.split('-')[0],\
                                global_timestamp ), file=logfile)
                             logfile.close()
+                            os.chmod(path, 660)
                         else :
-                            logfile = open(this_directory +\
-                                       "logfiles/"+ log_name + "." +\
-                                       day_string + ".txt",'a')
+                            path = os.path.join(this_directory, 'logfiles', f'{log_name}.{day_string}.txt')
+                            logfile = open(path, 'a')
                             print("%s %6s %-22s %-100s %-25s %s.%s" %\
                                ( time_string ,\
                                torque_out ,\
@@ -187,6 +187,7 @@ class ConfigurationSpec:
                                benchmark,\
                                build_handle ), file=logfile)
                             logfile.close()
+                            os.chmod(path, 660)
             self.benchmark_args_subdirs.clear()
         return job_ids
 

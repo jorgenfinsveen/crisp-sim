@@ -26,6 +26,9 @@ class SimulatorLog:
     def __contains__(self, key):
         return hasattr(self._obj, key)
 
+    def __delitem__(self, key):
+        delattr(self._obj, key)
+
     def get(self, key, default=None):
         return getattr(self._obj, key, default)
 
@@ -72,6 +75,9 @@ class SimulatorLogs:
 
     def __contains__(self, key):
         return hasattr(self._obj, key)
+
+    def __delitem__(self, key):
+        delattr(self._obj, key)
 
     def get(self, key, default=None):
         return getattr(self._obj, key, default)

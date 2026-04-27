@@ -178,7 +178,7 @@ def remove_entries_from_sim_log(entries: list[str], sim_log: SimulatorLogs) -> d
         )
 
     for key in entries:
-        sim_log.pop(key, None)
+        del sim_log[key]
     return sim_log
 
 

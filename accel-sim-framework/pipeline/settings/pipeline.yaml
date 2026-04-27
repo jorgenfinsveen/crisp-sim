@@ -2,17 +2,17 @@ name_prefix: sim
 
 
 instances:
-  - ORIN_2D
-  - ORIN_1D
-  - BASELINE_ORIN
-  - ORIN_1U
-  - ORIN_2U
+  # - ORIN_2D
+  # - ORIN_1D
+  # - BASELINE_ORIN
+  # - ORIN_1U
+  # - ORIN_2U
 
-  # - RTX3070_D2
-  # - RTX3070_D1
-  # - BASELINE_RTX3070
-  # - RTX3070_1
-  # - RTX3070_2
+  - RTX3070_D2
+  - RTX3070_D1
+  - BASELINE_RTX3070
+  - RTX3070_1
+  - RTX3070_2
 
 
 
