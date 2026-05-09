@@ -420,6 +420,8 @@ if options.trace_dir == "":
 else:
     gpgpusim_path = os.path.join( os.getenv("GPGPUSIM_ROOT"), "lib", os.getenv("GPGPUSIM_CONFIG"), "libcudart.so")
     version_string = extract_version(simulator_path, "accelsim") + extract_version(gpgpusim_path, "gpgpusim")
+if options.override_names:
+    version_string = "idi-crisp"
 running_sim_dir = os.path.join( options.run_directory, "gpgpu-sim-builds", version_string )
 if not os.path.exists( running_sim_dir ):
     # In the very rare case that concurrent builds try to make the directory at the same time

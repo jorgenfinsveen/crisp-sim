@@ -9,6 +9,7 @@ argparser.add_argument("--date_1",   required=True, help="First date to merge. [
 argparser.add_argument("--date_2",   required=True, help="Second date to merge. [YYYY_mm_DD__HH_MM].")
 argparser.add_argument("--new_date", required=False, help="New date. [YYYY_mm_DD__HH_MM].")
 argparser.add_argument("--dir",      required=True, help="Target results-dir e.g., '$ACCEL_SIM/pipeline/results'.")
+argparser.add_argument("--skip",     required=False, help"Skip renaming logfiles and updating simlogs [y/n]", default="n")
 args = argparser.parse_args()
 
 
@@ -209,6 +210,10 @@ def rename_outfiles():
                 os.rename(e_file_2, new_e_path)
 
 def main():
+    if args.skip and args.skip.strip().lower() != "n":
+        rename_outfiles()
+        return
+
     merge_sim_log_entries()
 
     sim_logs = get_simulator_logs(sim_logs_path)

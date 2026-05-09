@@ -37,13 +37,36 @@ GIT_FILES_CHANGED=`git --git-dir=$ROOT/.git diff --numstat | wc | sed -re 's/^\s
 GIT_FILES_CHANGED+=`git --git-dir=$ROOT/.git diff --numstat --cached | wc | sed -re 's/^\s+([0-9]+).*/\1/'`
 export ACCELSIM_COMMIT="$GIT_COMMIT-modified_$GIT_FILES_CHANGED"
 
+
+set_gpgpusim_commit() {
+    local l_git_dir="$ACCEL_SIM/gpu-simulator/gpgpu-sim/.git"
+    GIT_COMMIT=`git --git-dir=$l_git_dir log --abbrev-commit -n 1 | head -1 | sed -re 's/commit (.*)/\1/'`
+    GIT_FILES_CHANGED=`git --git-dir=$l_git_dir diff --numstat | wc | sed -re 's/^\s+([0-9]+).*/\1./'`
+    GIT_FILES_CHANGED+=`git --git-dir=$l_git_dir diff --numstat --cached | wc | sed -re 's/^\s+([0-9]+).*/\1/'`
+    GPGPUSIM_BUILD_STRING="gpgpu-sim_git-commit-$GIT_COMMIT-modified_$GIT_FILES_CHANGED"
+    export GPGPUSIM_COMMIT="$GIT_COMMIT-modified_$GIT_FILES_CHANGED"
+}
+
+
+
 alias launch="(cd $ACCEL_SIM && python3 -m pipeline.launch)"
 alias collect="(cd $ACCEL_SIM && python3 -m pipeline.collect)"
 
+# Add all cached sim-runs from output/.cache/ into simulator_logs.yaml
+# $1 - output directory (e.g. /cluster/projects/itea_lille-idi-epic-studenter/crisp/output)
 cache_add() {
     (cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory $1)
 }
 
+# Merge two instances from the same experiment
+# $1 - experiment name
+# $2 - first date
+# $3 - second date
+# $4 - result dir (e.g. /cluster/projects/itea_lille-idi-epic-studenter/crisp)
+# $5 - new date (optional)
+merge() {
+    (cd $ACCEL_SIM && python3 -m pipeline.logic.tools.merge_experiment_dates --exp $1 --date_1 $2 --date_2 $3 --dir $4) #--new_date $5)
+}
 
 export CRISP_LOCAL="$ACCEL_SIM"
 
@@ -128,5 +151,7 @@ run() {
 source $HOME/pyenv
 assert_gcc_symlink
 source_all_environments
+set_gpgpusim_commit
+
 
 export CUSTOM_SETUP_ENVIRONMENT_WAS_RUN=1

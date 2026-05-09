@@ -13,10 +13,11 @@ argparser.add_argument("--directory", required=False, help="Directory of simulat
 args = argparser.parse_args()
 args.directory = os.path.expandvars(args.directory)
 
+
 CACHE = Path(os.path.join(args.directory, '.cache/'))
 LOG_PATH  = Path(os.path.join(args.directory, 'simulator_logs.yaml'))
 
-LOGS = get_simulator_logs(LOG_PATH)
+LOGS: SimulatorLogs = get_simulator_logs(LOG_PATH)
 
 data = {}
 date = ""
@@ -99,9 +100,13 @@ def add_to_logs(cache: Path):
     experiment = data["experiment"]
     experiment_dir = os.path.join(args.directory, experiment)
 
-    entry: SimulatorLog = new_sim_log_entry()
     log_name = f"sim-{date}"
-    LOGS.log_name = entry
+
+    if log_name in LOGS.get_all():
+        entry = LOGS[log_name]
+    else:
+        entry = new_sim_log_entry()
+        LOGS.log_name = entry
 
     benchmarks = build_benchmarks()
     configs = build_configs()

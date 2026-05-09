@@ -4,4 +4,4 @@ QHD: $ACTIVE_ROOT/traces/graphics/QHD
 artifact-merged: $ACTIVE_ROOT/hw_run/traces/vulkan/
 artifact-separate: $ACTIVE_ROOT/hw_run/traces/vulkan/
 crisp: $ACTIVE_ROOT/hw_run/traces/vulkan/
-pipeline: $ACTIVE_ROOT/hw_run/traces/vulkan/
+pipeline: /cluster/projects/itea_lille-idi-epic-studenter/crisp/hw_run/traces/vulkan/ #$ACTIVE_ROOT/hw_run/traces/vulkan/

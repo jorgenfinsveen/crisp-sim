@@ -50,6 +50,82 @@ rendering-4k:
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
 
+tpc-test:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+rendering-4k-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+rendering-4k-sequential:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
 clusters_vs_cpi:
   params:
     - gpgpu_n_clusters

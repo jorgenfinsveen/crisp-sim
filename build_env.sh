@@ -63,18 +63,30 @@ build_accelsim() {
     source "$ACCEL_SIM/gpu-simulator/setup_environment.sh"
     cd "$ACCEL_SIM"
     make clean
+    #make -j -C ./gpu-simulator -n 2>&1 | grep "^g++" | head -5
     make -j -C ./gpu-simulator
     cd "$ROOT"
 }
 
 
 build_accelsim_hard() {
-   cd "$ACCEL_SIM/gpu-simulator"
+   cd "$ACCEL_SIM/gpu-simulator/gpgpu-sim"
    rm -rf "build" "lib"
-   cd "$ACCEL_SIM"
+   cd "$ACCEL_SIM/gpu-simulator"
    rm -rf "build" "bin"
    build_accelsim
    cd "$ROOT"
+}
+
+build_gpgpusim_hard() {
+    cd "$ACCEL_SIM/gpu-simulator/gpgpu-sim"
+    rm -rf "build" "lib"
+    cd "$ACCEL_SIM/gpu-simulator"
+    source "setup_environment.sh"
+    cd "$ACCEL_SIM"
+    make clean
+    make -j -C ./gpu-simulator gpgpu-sim
+    cd "$ROOT"
 }
 
 build_all() {
@@ -90,4 +102,36 @@ container() {
         --bind $HOME/projects/crisp_framework:$HOME/projects/crisp_framework \
         --pwd $HOME/projects/crisp_framework \
         $HOME/containers/crisp-installer.sif
+}
+
+build() {
+    local warn_level="error_only"
+
+    if [[ "$1" == "warn" ]]; then
+        warn_level="warn"    
+    fi
+
+    apptainer exec \
+        --nv \
+        --writable-tmpfs \
+        --bind $HOME/projects/crisp_framework:$HOME/projects/crisp_framework \
+        --pwd $HOME/projects/crisp_framework \
+        $HOME/containers/crisp-installer.sif \
+        bash -c "source build_env.sh && export MAKE_LOG_LEVEL=$warn_level && build_accelsim_hard"
+}
+
+build2() {
+    local warn_level="error_only"
+
+    if [[ "$1" == "warn" ]]; then
+        warn_level="warn"    
+    fi
+
+    apptainer exec \
+        --nv \
+        --writable-tmpfs \
+        --bind $HOME/projects/crisp_framework:$HOME/projects/crisp_framework \
+        --pwd $HOME/projects/crisp_framework \
+        $HOME/containers/crisp-installer.sif \
+        bash -c "source build_env.sh && export MAKE_LOG_LEVEL=$warn_level && build_gpgpusim_hard"
 }
