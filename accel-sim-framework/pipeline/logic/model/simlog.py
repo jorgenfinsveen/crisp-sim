@@ -67,11 +67,11 @@ class SimulatorLogs:
         return to_namespace(getattr(self._obj, key))
 
     def __setitem__(self, key, value: SimulatorLog):
-        # if isinstance(value, SimulatorLog):
-        #     setattr(self._obj, key, value._obj)
-        # else:
-        #     setattr(self._obj, key, value)
-        setattr(self._obj, key, to_namespace(value._obj))
+        if isinstance(value, SimulatorLog):
+            setattr(self._obj, key, value._obj)
+        else:
+            setattr(self._obj, key, value)
+        # setattr(self._obj, key, to_namespace(value._obj))
 
     def __contains__(self, key):
         return hasattr(self._obj, key)
@@ -135,8 +135,17 @@ def get(simulator_logs: dict, path: Path=None) -> NS:
     def get_latest(self, experiment: str="") -> SimulatorLog:
         if experiment == "":
             return to_simulator_log(getattr(self, max(self.get_all())))
-        experiments = [exp for exp in self.get_all() if f'sim-{exp}' in self.get_all()]
-        return to_simulator_log(getattr(self, max(experiments)))
+        latest_date = "1999-12-12 00:00"
+        for k, log in self.items():
+            #print(log)
+            if log.experiment == experiment and log.date > latest_date:
+                latest = k
+                latest_date = log.date
+        #print(latest.date)
+        return to_simulator_log(getattr(self, latest))
+        #experiments = [exp for exp in self.get_all() if f'sim-{exp}' in self.get_all()]
+
+        #return to_simulator_log(getattr(self, max(experiments, key="date")))
 
 
     def get_oldest(self, experiment: str="") -> NS:

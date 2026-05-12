@@ -9,7 +9,7 @@ argparser.add_argument("--date_1",   required=True, help="First date to merge. [
 argparser.add_argument("--date_2",   required=True, help="Second date to merge. [YYYY_mm_DD__HH_MM].")
 argparser.add_argument("--new_date", required=False, help="New date. [YYYY_mm_DD__HH_MM].")
 argparser.add_argument("--dir",      required=True, help="Target results-dir e.g., '$ACCEL_SIM/pipeline/results'.")
-argparser.add_argument("--skip",     required=False, help"Skip renaming logfiles and updating simlogs [y/n]", default="n")
+argparser.add_argument("--skip",     required=False,  help="Skip renaming logfiles and updating simlogs [y/n]")
 args = argparser.parse_args()
 
 

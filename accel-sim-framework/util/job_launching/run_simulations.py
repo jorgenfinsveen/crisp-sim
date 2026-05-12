@@ -430,9 +430,11 @@ if not os.path.exists( running_sim_dir ):
         os.makedirs( running_sim_dir )
     except:
         pass
-
-if not os.path.exists(os.path.join(running_sim_dir,os.path.basename(simulator_path))):
-    shutil.copy( simulator_path, running_sim_dir )
+if os.path.exists(os.path.join(running_sim_dir,os.path.basename(simulator_path))):
+    subprocess.run(["rm", os.path.join(running_sim_dir,os.path.basename(simulator_path))])
+shutil.copy( simulator_path, running_sim_dir )
+# if not os.path.exists(os.path.join(running_sim_dir,os.path.basename(simulator_path))):
+#     shutil.copy( simulator_path, running_sim_dir )
 options.simulator_dir = running_sim_dir
 
 common.load_defined_yamls()

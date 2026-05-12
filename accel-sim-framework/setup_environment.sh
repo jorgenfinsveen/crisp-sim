@@ -50,7 +50,19 @@ set_gpgpusim_commit() {
 
 
 alias launch="(cd $ACCEL_SIM && python3 -m pipeline.launch)"
-alias collect="(cd $ACCEL_SIM && python3 -m pipeline.collect)"
+alias launchnow="(cd $ACCEL_SIM && python3 -m pipeline.launch --run y)"
+
+collect() {
+    if [[ "$1" == "d" ]]; then
+        (cd $ACCEL_SIM && python3 -m pipeline.collect --date $2)
+    elif [[ "$1" == "e" ]]; then
+        (cd $ACCEL_SIM && python3 -m pipeline.collect --experiment $2)
+    elif [[ "$1" == "de" ]]; then
+        (cd $ACCEL_SIM && python3 -m pipeline.collect --date $2 --experiment $3)
+    else
+        (cd $ACCEL_SIM && python3 -m pipeline.collect)
+    fi
+}
 
 # Add all cached sim-runs from output/.cache/ into simulator_logs.yaml
 # $1 - output directory (e.g. /cluster/projects/itea_lille-idi-epic-studenter/crisp/output)

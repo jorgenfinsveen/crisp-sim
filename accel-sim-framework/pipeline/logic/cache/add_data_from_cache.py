@@ -102,11 +102,11 @@ def add_to_logs(cache: Path):
 
     log_name = f"sim-{date}"
 
-    if log_name in LOGS.get_all():
+    if log_name in LOGS.keys():
         entry = LOGS[log_name]
     else:
         entry = new_sim_log_entry()
-        LOGS.log_name = entry
+        LOGS[log_name] = entry
 
     benchmarks = build_benchmarks()
     configs = build_configs()

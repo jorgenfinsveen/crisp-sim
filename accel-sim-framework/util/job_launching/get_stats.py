@@ -100,7 +100,7 @@ options.run_dir = common.dir_option_test( options.run_dir, this_directory + ("..
 if not os.path.isdir(options.run_dir):
     exit(options.run_dir + " does not exist - specify the run directory where the benchmark/config dirs exist")
 
-options.stats_yml = common.file_option_test( options.stats_yml, os.path.join( this_directory, "stats", "example_stats.yml" ),
+options.stats_yml = common.file_option_test( options.stats_yml, os.path.join( this_directory, "stats", "default.yml" ),
                                             this_directory )
 stat_map = {}
 configs = []
@@ -191,7 +191,7 @@ for idx, app_and_args in enumerate(apps_and_args):
 
         if options.override_names and not options.configs_list != "" and not options.benchmark_list != "":
             path = f"{output_dir}/{jobname}.o"
-            outfile = os.path.join(path) 
+            outfile = os.path.join(path)
         elif options.override_names: # Todo: Endre slik at den kun bruker dato-delen
             all_outfiles = [os.path.join(output_dir, f) \
                            for f in os.listdir(output_dir) if (f == f"{options.logfile.split('/')[-1]}.o")] #if(re.match(r'.*\.o+',f))]
@@ -263,7 +263,7 @@ for idx, app_and_args in enumerate(apps_and_args):
                 file=sys.stderr)
             if not options.ignore_failures:
                 continue
-        
+
         relaunch_g = 0
         relaunch_c = 0
         if not options.per_kernel:

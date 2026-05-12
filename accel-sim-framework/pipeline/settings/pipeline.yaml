@@ -2,24 +2,32 @@ name_prefix: sim
 
 
 instances:
-   - ORIN_2D
-   - ORIN_1D
-   - BASELINE_ORIN
-   - ORIN_1U
-   - ORIN_2U
-   - ORIN_TPC
+    - ORIN_2D
+    - ORIN_1D
+    - BASELINE_ORIN
+    - ORIN_1U
+    - ORIN_2U
 
-  # - RTX3070_2D
-  # - RTX3070_1D
-  # - BASELINE_RTX3070
-  # - RTX3070_1U
-  # - RTX3070_2U
-  # - RTX3070_TPC
+    - ORIN_TPC
+
+    # - BASELINE_ORIN_mem
+    # - ORIN_2U_mem
+
+    - RTX3070_2D
+    - RTX3070_1D
+    - BASELINE_RTX3070
+    - RTX3070_1U
+    - RTX3070_2U
+
+    - RTX3070_TPC
+
+    # - BASELINE_RTX3070_mem
+    # - RTX3070_2U_mem
 
 
 
 experiment:
-  name: rendering-4k-concurrent
+  name: rendering-4k-mig
   path: /cluster/projects/itea_lille-idi-epic-studenter/crisp/settings/experiments.yaml
 
 shared_mode:
@@ -32,6 +40,8 @@ shared_mode:
 collect:
   detailed: true
   metric: gcstack_base
+  stats: gcstack
+  stats_dir: $ACCEL_SIM/util/job_launching/stats
 
 
 launcher: idun
@@ -47,7 +57,7 @@ job_mem: 64G # Default is 4G, but this turned out to be insufficient for the wor
 extra_configs:
   - SASS
   - concurrent
-  - fg
+  #- fg
   #- VISUAL
 
 
