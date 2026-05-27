@@ -34,6 +34,8 @@ collect_abs:
     - 'kernel_launch_uid\s*=\s*(.*)'
     - 'L2_BW\s*=\s*(.*)GB\/Sec'
     - 'L2_BW_total\s*=\s*(.*)GB\/Sec'
+    - 'DRAM_BW\s*=\s*(.*)GB\/Sec'
+    - 'DRAM_BW_total\s*=\s*(.*)GB\/Sec'
 
 collect_rates:
     - 'gpgpu_simulation_rate\s+=\s+(.*)\s+\(inst\/sec\)'
