@@ -36,6 +36,11 @@ def parse_experiment(name):
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
 
+def make_export_dirs(run_id: str) -> Path:
+    export_root = Path(os.path.join(experiment.results_dir, "export", experiment.name, run_id))
+    export_root.mkdir(parents=True, exist_ok=True)
+    return export_root
+
 
 def main():
     global pipeline
@@ -53,9 +58,9 @@ def main():
 
 
     output_dir = os.path.join(experiment.results_dir, "output", experiment.name)
-    export_dir = os.path.join(experiment.results_dir, "export", "total")
+    export_dir = make_export_dirs(run_id)
 
-    export_csv = os.path.join(export_dir, f"{run_id}.csv")
+    export_csv = os.path.join(export_dir, f"{run_id}.total.csv")
     executable = os.path.join(GET_STATS_SCRIPT)
 
     benchmarks = ",".join(experiment.benchmarks)

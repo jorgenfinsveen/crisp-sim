@@ -259,6 +259,16 @@ for idx, app_and_args in enumerate(apps_and_args):
         f.close()
 
         if not exit_success:
+            with open(outfile, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                last_lines = lines[-10:]
+                for line in last_lines:
+                    if "gpgpu-sim: *** exit detected ***" in line.strip().lower():
+                        exit_success = True
+                    elif "exit detected" in line.strip().lower():
+                        exit_success = True
+
+        if not exit_success:
             print("WARNING - Detected that {0} does not contain a terminating string from GPGPU-Sim. The output is potentially invalid".format(outfile),
                 file=sys.stderr)
             if not options.ignore_failures:

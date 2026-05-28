@@ -9,9 +9,13 @@ instances:
     - ORIN_2U
 
     - ORIN_TPC
+    - ORIN_GPC
 
     # - BASELINE_ORIN_mem
     # - ORIN_2U_mem
+    # - ORIN_N_MEM_8
+    # - ORIN_N_MEM_16
+    # - ORIN_N_MEM_32
 
     - RTX3070_2D
     - RTX3070_1D
@@ -20,14 +24,18 @@ instances:
     - RTX3070_2U
 
     - RTX3070_TPC
+    - RTX3070_GPC
 
     # - BASELINE_RTX3070_mem
     # - RTX3070_2U_mem
+    # - RTX3070_N_MEM_8
+    # - RTX3070_N_MEM_16
+    # - RTX3070_N_MEM_32
 
 
 
 experiment:
-  name: rendering-4k-mig
+  name: rendering-4k-concurrent #compute
   path: /cluster/projects/itea_lille-idi-epic-studenter/crisp/settings/experiments.yaml
 
 shared_mode:
@@ -57,7 +65,7 @@ job_mem: 64G # Default is 4G, but this turned out to be insufficient for the wor
 extra_configs:
   - SASS
   - concurrent
-  #- fg
+  - fg
   #- VISUAL
 
 

@@ -75,6 +75,20 @@ tpc-test:
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
 
+gpc-test:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
 
 rendering-4k-concurrent:
   params:
