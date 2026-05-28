@@ -76,8 +76,9 @@ def get_config(path: Path) -> Config:
     return config_get(path)
 
 
-def get_outfile(path: Path) -> Outfile:
-    path = assert_file_exists(path)
+def get_outfile(path: Path, throw_exception: bool=True) -> Outfile|None:
+    path = assert_file_exists(path, throw_exception)
+    if not path: return None
     return outfile_get(path)
 
 
