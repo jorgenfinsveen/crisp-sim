@@ -65,9 +65,9 @@ collect() {
 }
 
 # Add all cached sim-runs from output/.cache/ into simulator_logs.yaml
-# $1 - output directory (e.g. /cluster/projects/itea_lille-idi-epic-studenter/crisp/output)
+# It determines which cache to look at based on shared_mode in pipeline.yaml
 cache_add() {
-    (cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory $1)
+    (cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache)
 }
 
 # Merge two instances from the same experiment
