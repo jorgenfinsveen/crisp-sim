@@ -79,7 +79,7 @@ class SimulatorLogs:
     def __delitem__(self, key):
         delattr(self._obj, key)
 
-    def get(self, key, default=None):
+    def get(self, key, default=None) -> SimulatorLog:
         return getattr(self._obj, key, default)
 
     def get_all(self) -> list[str]:

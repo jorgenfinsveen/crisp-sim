@@ -36,7 +36,6 @@ def get_experiments(path: Path="") -> Experiments:
         return experiment_get(exp, path)
 
 def get_experiment(name: str, path: Path="") -> Experiment:
-    print(f"FROM PARSER: \n\tName: {name}\n\tPath: {path}")
     if path == "":
         path = get_pipeline().experiment.path
 

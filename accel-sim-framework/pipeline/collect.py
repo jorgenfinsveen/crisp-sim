@@ -2,17 +2,17 @@
 
 from . import *
 
-pipeline = {}
-experiment = {}
+pipeline: Pipeline = None
+experiments: Experiments = None
+experiment: Experiment = None
+simulator_logs: SimulatorLogs = None
+log: SimulatorLog = None
+active_root: Path = None
+key: str = None
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--date", required=False, help="Date of the run to collect [YYYY_mm_DD__HH_MM].")
-parser.add_argument("--experiment", required=False, help="Name of an experiment to get the latest run from.")
-args = parser.parse_args()
-
-exp_name = args.experiment.strip() if args.experiment else ""
 
 def set_env():
+    global active_root
     if pipeline.shared_mode.shared:
         active_root = os.path.expandvars(pipeline.shared_mode.root)
         result_root = os.path.expandvars(pipeline.shared_mode.results_root)
@@ -28,13 +28,91 @@ def parse_pipeline_config():
     pipeline = get_pipeline(PIPELINE_CONFIG)
     set_env()
 
+def parse_experiments():
+    global experiments
+    experiments = get_experiments(os.path.expandvars(pipeline.experiment.path))
 
-def parse_experiment(name):
+def parse_experiment(name: str):
     global experiment
-    name = name if name else pipeline.experiment.name
     experiment = get_experiment(name, os.path.expandvars(pipeline.experiment.path))
     experiment.results_dir = Path(os.path.expandvars(experiment.results_dir))
     experiment.logfiles = Path(os.path.expandvars(experiment.logfiles))
+
+def parse_simlogs():
+    global simulator_logs
+    simulator_logs = get_simulator_logs(os.path.join(active_root, "output", "simulator_logs.yaml"))
+
+def parse_log():
+    global log
+    log = simulator_logs.get(key)
+
+    if not experiment:
+        parse_experiment(log.experiment)
+
+def select_latest():
+    latest: SimulatorLog = simulator_logs.get_latest()
+    latest_key = f'sim-{convert_date(latest.date, "default", "underscore")}'
+    print(f"\nMost recent experiment: {latest_key}")
+    print(f"\t- Name: {latest.experiment}")
+    print(f"\t- Date: {latest.date}")
+
+    while True:
+        s = input("Collect this experiment [y/n]: ").strip().lower()
+        if s == "y":
+            global key
+            key = latest_key
+            return
+        elif s == "n":
+            return
+
+        print("Write either y or n.")
+
+def select_experiment():
+    exp_list = experiments.get_all()
+
+    print("\nExperiment alternatives:")
+    print(35*"-")
+    for i in range(len(exp_list)):
+        print(f"{i+1}.\t{exp_list[i]}")
+
+    while True:
+        exp_idx = input(f"Enter experiment [1-{len(exp_list)}]: ")
+        if not exp_idx.isdigit() or int(exp_idx) < 1 or int(exp_idx) > len(exp_list):
+            print(f"Select a number between 1 and {len(exp_list)}.")
+            continue
+        experiment_name = exp_list[int(exp_idx)-1]
+
+        parse_experiment(experiment_name)
+        return
+
+def select_date():
+    logdates = simulator_logs.get_all()
+    dates = []
+
+    counter = 0
+    for d in logdates:
+        if (simulator_logs[d].experiment == experiment.name):
+            dates.append(d.split('-')[1])
+            counter += 1
+        if counter == 9: break
+
+    dates = sorted(dates, reverse=True)
+
+    print("\nDate alternatives:")
+    print(35*"-")
+    for i in range(len(dates)):
+        print(f"{i+1}.\t{dates[i]}")
+
+    while True:
+        date_idx = input(f"Enter date [1-{len(dates)}]: ")
+        if not date_idx.isdigit() or int(date_idx) < 1 or int(date_idx) > len(dates):
+            print(f"Select a number between 1 and {len(dates)}.")
+            continue
+        date = dates[int(date_idx)-1]
+
+        global key
+        key = f"sim-{date}"
+        return
 
 def make_export_dirs(run_id: str) -> Path:
     export_root = Path(os.path.join(experiment.results_dir, "export", experiment.name, run_id))
@@ -42,20 +120,21 @@ def make_export_dirs(run_id: str) -> Path:
     return export_root
 
 
-def main():
-    global pipeline
+def init() -> str:
     parse_pipeline_config()
-    if args.experiment:
-        print(f"\nSearching for experiment {args.experiment}...")
-        parse_experiment(args.experiment)
-        path = os.path.join(experiment.results_dir, 'output', 'simulator_logs.yaml')
-        sim_logs = get_simulator_logs(path)
-        exp_name = args.experiment.strip() if args.experiment else ""
-        log = sim_logs.get_latest(exp_name)
-        run_id = convert_date(log.date, "default", "underscore")
-        substr = f"results from {exp_name}" if exp_name != "" else ""
-        print(f"\nLatest {substr}: sim-{run_id}")
+    parse_experiments()
+    parse_simlogs()
+    select_latest()
 
+    if not key:
+        select_experiment()
+        select_date()
+
+    parse_log()
+    return key.split("-")[1]
+
+def main():
+    run_id = init()
 
     output_dir = os.path.join(experiment.results_dir, "output", experiment.name)
     export_dir = make_export_dirs(run_id)
@@ -64,7 +143,7 @@ def main():
     executable = os.path.join(GET_STATS_SCRIPT)
 
     benchmarks = ",".join(experiment.benchmarks)
-    configs = ",".join(log.get_configs().keys())
+    configs = ",".join([config.split(";;")[0] for config in log.configs])
 
     stats = os.path.expandvars(os.path.join(pipeline.collect.stats_dir, f"{pipeline.collect.stats}.yml"))
 
@@ -75,7 +154,6 @@ def main():
     #lines.append(f'(cd $ACCEL_SIM && python3 -m pipeline.logic.cache.add_data_from_cache --directory {experiment.results_dir})\n')
 
     lines.append(f'mkdir -p {export_dir}\n')
-
 
     lines.append(f'{executable} \\')
     lines.append('\t-k \\')
@@ -99,12 +177,9 @@ def main():
     subprocess.run(['chmod', '+x', export_sh])
 
     print(f"Wrote: {export_sh}")
-    ans = input("Run it now? [y/N]: ").strip().lower()
+    ans = input("Run it now? [y/n]: ").strip().lower()
     if ans == "y":
         subprocess.run(['bash', export_sh])
-    # run_csv_generator = input("Run csv generator for the test result? [y/N]: ")
-    # if run_csv_generator == "y":
-    #     subprocess.run(CALL_COLLECT_CSV_SCRIPT)
 
 if __name__ == "__main__":
     main()

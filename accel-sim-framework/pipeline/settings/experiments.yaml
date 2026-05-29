@@ -75,6 +75,82 @@ tpc-test:
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
 
+memmory-controllers-test:
+  params:
+    - gpgpu_n_mem
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+address-mapping-policies:
+  params:
+    - gpgpu_memory_partition_indexing
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+PAE-BIM:
+  params:
+    - gpgpu_memory_partition_indexing
+    - gpgpu_pae_bim_variant
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
 gpc-test:
   params:
     - gpgpu_n_clusters
@@ -88,7 +164,6 @@ gpc-test:
     - 4K-UHD:tessellation
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
-
 
 rendering-4k-concurrent:
   params:
@@ -219,5 +294,67 @@ render_QHD:
     - crisp-local:instancing_2k
     - crisp-local:pbrtexture_2k
     - crisp-local:tessellation_2k
-  results_dir: $RESULT_ROOT/results
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+
+render_passes-4k-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+    - gcstack_idle
+    - gcstack_finished
+    - gcstack_empty_ibuf
+    - gcstack_last_ins
+    - gcstack_sync
+    - gcstack_control
+    - gcstack_mem_data
+    - gcstack_com_data
+    - gcstack_mem_struct
+    - gcstack_com_struct
+    - gcstack_tot
+  benchmarks:
+    - 4K-UHD:render_passes
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+# Concurrent
+compute:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-separate:klt_tracker
+    - artifact-separate:vpi_sample_03_harris_corners
+    - artifact-separate:vpi_sample_11_fisheye
+    - artifact-separate:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+compute-mig:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-separate:klt_tracker
+    - artifact-separate:vpi_sample_03_harris_corners
+    - artifact-separate:vpi_sample_11_fisheye
+    - artifact-separate:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+compute-sequential:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-separate:klt_tracker
+    - artifact-separate:vpi_sample_03_harris_corners
+    - artifact-separate:vpi_sample_11_fisheye
+    - artifact-separate:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles

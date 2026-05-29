@@ -35,7 +35,7 @@ instances:
 
 
 experiment:
-  name: rendering-4k-concurrent #compute
+  name: rendering-4k-mig
   path: /cluster/projects/itea_lille-idi-epic-studenter/crisp/settings/experiments.yaml
 
 shared_mode:

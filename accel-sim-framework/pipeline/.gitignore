@@ -12,6 +12,7 @@ results/
 
 # Directory with custom scripts for testing various aspects of the pipeline.
 test/
+test.*
 
 # Logfiles which are produced by slurm jobs.
 *.log
