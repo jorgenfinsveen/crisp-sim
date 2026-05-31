@@ -140,6 +140,8 @@ def main():
     export_dir = make_export_dirs(run_id)
 
     export_csv = os.path.join(export_dir, f"{run_id}.total.csv")
+    export_per_sm_csv = os.path.join(export_dir, f"{run_id}.per_sm.csv")
+    export_mem_partition_csv = os.path.join(export_dir, f"{run_id}.mem_partition.csv")
     executable = os.path.join(GET_STATS_SCRIPT)
 
     benchmarks = ",".join(experiment.benchmarks)
@@ -165,6 +167,20 @@ def main():
     lines.append(f'\t-r {output_dir} \\')
     lines.append(f'\t-s {stats} \\')
     lines.append(f'\t > {export_csv}')
+
+    lines.append(f'\npython3 {GET_STATS_PER_SM_SCRIPT} \\')
+    lines.append(f'\t-r {output_dir} \\')
+    lines.append(f'\t-B {benchmarks} \\')
+    lines.append(f'\t-C {configs} \\')
+    lines.append(f'\t-d {run_id} \\')
+    lines.append(f'\t > {export_per_sm_csv}')
+
+    lines.append(f'\npython3 {GET_STATS_MEM_PARTITION_SCRIPT} \\')
+    lines.append(f'\t-r {output_dir} \\')
+    lines.append(f'\t-B {benchmarks} \\')
+    lines.append(f'\t-C {configs} \\')
+    lines.append(f'\t-d {run_id} \\')
+    lines.append(f'\t > {export_mem_partition_csv}')
 
     lines.append('\necho "Ferdig :)"')
 
