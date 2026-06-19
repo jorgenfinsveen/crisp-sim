@@ -1,6 +1,8 @@
-480p: $ACTIVE_ROOT/traces/graphics/480p
-QHD: $ACTIVE_ROOT/traces/graphics/QHD
-4K-UHD: $ACTIVE_ROOT/traces/graphics/4K-UHD
+480p: /cluster/projects/itea_lille-idi-epic-studenter/crisp/traces/graphics/480p
+720p: /cluster/projects/itea_lille-idi-epic-studenter/crisp/traces/graphics/720p
+HD: /cluster/projects/itea_lille-idi-epic-studenter/crisp/traces/graphics/HD
+QHD: /cluster/projects/itea_lille-idi-epic-studenter/crisp/traces/graphics/QHD
+4K-UHD: /cluster/projects/itea_lille-idi-epic-studenter/crisp/traces/graphics/4K-UHD
 artifact-merged: $ACTIVE_ROOT/hw_run/traces/vulkan/
 artifact-separate: $ACTIVE_ROOT/hw_run/traces/vulkan/
 crisp: $ACTIVE_ROOT/hw_run/traces/vulkan/

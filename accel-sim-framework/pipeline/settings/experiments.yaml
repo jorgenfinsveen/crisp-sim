@@ -190,6 +190,115 @@ rendering-4k-concurrent:
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles
 
+rendering-2k-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - QHD:render_passes-qhd
+    - QHD:gears-qhd
+    - QHD:instancing-qhd
+    - QHD:pbrtexture-qhd
+    - QHD:tessellation-qhd
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+rendering-1k-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - HD:render_passes-hd
+    - HD:gears-hd
+    - HD:instancing-hd
+    - HD:pbrtexture-hd
+    - HD:tessellation-hd
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+rendering-720-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - 720p:render_passes-720p
+    - 720p:gears-720p
+    - 720p:instancing-720p
+    - 720p:pbrtexture-720p
+    - 720p:tessellation-720p
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+rendering-480-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - 480p:render_passes-480p
+    - 480p:gears-480p
+    - 480p:instancing-480p
+    - 480p:pbrtexture-480p
+    - 480p:tessellation-480p
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+rendering-resolution-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - 480p:render_passes-480p
+    - 480p:gears-480p
+    - 480p:instancing-480p
+    - 480p:pbrtexture-480p
+    - 480p:tessellation-480p
+    - 720p:render_passes-720p
+    - 720p:gears-720p
+    - 720p:instancing-720p
+    - 720p:pbrtexture-720p
+    - 720p:tessellation-720p
+    - HD:render_passes-hd
+    - HD:gears-hd
+    - HD:instancing-hd
+    - HD:pbrtexture-hd
+    - HD:tessellation-hd
+    - QHD:render_passes-qhd
+    - QHD:gears-qhd
+    - QHD:instancing-qhd
+    - QHD:pbrtexture-qhd
+    - QHD:tessellation-qhd
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+sponza-and-deer-resolution-concurrent:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gcstack_base
+  benchmarks:
+    - 480p:render_passes-480p
+    - 480p:tessellation-480p
+    - 720p:render_passes-720p
+    - 720p:tessellation-720p
+    - HD:render_passes-hd
+    - HD:tessellation-hd
+    - QHD:render_passes-qhd
+    - QHD:tessellation-qhd
+    - 4K-UHD:render_passes
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
 rendering-4k-mig:
   params:
     - gpgpu_n_clusters
@@ -356,5 +465,49 @@ compute-sequential:
     - artifact-separate:vpi_sample_03_harris_corners
     - artifact-separate:vpi_sample_11_fisheye
     - artifact-separate:vpi_sample_12_optflow_lk_refined
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+megapack:
+  params:
+    - gpgpu_n_clusters
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-separate:klt_tracker
+    - artifact-separate:vpi_sample_03_harris_corners
+    - artifact-separate:vpi_sample_11_fisheye
+    - 4K-UHD:render_passes
+    - 4K-UHD:gears
+    - 4K-UHD:instancing
+    - 4K-UHD:pbrtexture
+    - 4K-UHD:tessellation
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+artifact:
+  params:
+    - gpgpu_n_clusters
+    - gpgpu_n_cores_per_cluster
+    - gpgpu_n_mem
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-merged:render_passes_2k
+    - artifact-merged:render_passes_2k_lod0
+  results_dir: $RESULT_ROOT
+  logfiles: $RESULT_ROOT/logfiles
+
+scheduling-policies:
+  params:
+    - gpgpu_scheduler
+  results:
+    - gpgpu_n_clusters
+  benchmarks:
+    - artifact-separate:klt_tracker
+    - artifact-separate:vpi_sample_03_harris_corners
+    - artifact-separate:vpi_sample_11_fisheye
+    - 4K-UHD:render_passes
+    - 4K-UHD:tessellation
   results_dir: $RESULT_ROOT
   logfiles: $RESULT_ROOT/logfiles

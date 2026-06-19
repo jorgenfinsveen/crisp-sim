@@ -91,9 +91,12 @@ def select_date():
 
     counter = 0
     for d in logdates:
-        if (simulator_logs[d].experiment == experiment.name):
-            dates.append(d.split('-')[1])
-            counter += 1
+        try:
+            if (simulator_logs[d]["experiment"] == experiment.name):
+                dates.append(d.split('-')[1])
+                counter += 1
+        except Exception as e:
+            continue
         if counter == 9: break
 
     dates = sorted(dates, reverse=True)

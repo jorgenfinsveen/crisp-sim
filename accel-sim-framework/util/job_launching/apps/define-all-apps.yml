@@ -2,34 +2,62 @@
     exec_dir: "$HOME/test/"
     data_dirs: "$HOME/test/"
     execs:
-        - gears:
+        - gears-480p:
           - args: 'NO_ARGS'
-        - instancing:
+        - instancing-480p:
           - args: 'NO_ARGS'
-        - pbrtexture:
+        - pbrtexture-480p:
           - args: 'NO_ARGS'
-        - tessellation:
+        - tessellation-480p:
+          - args: 'NO_ARGS'
+        - render_passes-480p:
+          - args: 'NO_ARGS'
+
+720p:
+    exec_dir: "$HOME/test/"
+    data_dirs: "$HOME/test/"
+    execs:
+        - gears-720p:
+          - args: 'NO_ARGS'
+        - instancing-720p:
+          - args: 'NO_ARGS'
+        - pbrtexture-720p:
+          - args: 'NO_ARGS'
+        - tessellation-720p:
+          - args: 'NO_ARGS'
+        - render_passes-720p:
+          - args: 'NO_ARGS'
+
+HD:
+    exec_dir: "$HOME/test/"
+    data_dirs: "$HOME/test/"
+    execs:
+        - gears-hd:
+          - args: 'NO_ARGS'
+        - instancing-hd:
+          - args: 'NO_ARGS'
+        - pbrtexture-hd:
+          - args: 'NO_ARGS'
+        - tessellation-hd:
+          - args: 'NO_ARGS'
+        - render_passes-hd:
           - args: 'NO_ARGS'
 
 QHD:
     exec_dir: "$HOME/test/"
     data_dirs: "$HOME/test/"
     execs:
-        - gears:
+        - gears-qhd:
           - args: 'NO_ARGS'
-        - render_passes:
+        - instancing-qhd:
           - args: 'NO_ARGS'
-        - render_passes_lod0:
+        - pbrtexture-qhd:
           - args: 'NO_ARGS'
-        - instancing:
+        - tessellation-qhd:
           - args: 'NO_ARGS'
-        - pbrtexture:
+        - render_passes-qhd:
           - args: 'NO_ARGS'
-        - pipelines:
-          - args: 'NO_ARGS'
-        - tessellation:
-          - args: 'NO_ARGS'
-        - geometryshader:
+        - render_passes_lod0-qhd:
           - args: 'NO_ARGS'
 
 4K-UHD:
@@ -38,13 +66,13 @@ QHD:
     execs:
         - gears:
           - args: 'NO_ARGS'
-        - render_passes:
-          - args: 'NO_ARGS'
         - instancing:
           - args: 'NO_ARGS'
         - pbrtexture:
           - args: 'NO_ARGS'
         - tessellation:
+          - args: 'NO_ARGS'
+        - render_passes:
           - args: 'NO_ARGS'
 
 artifact-merged:
@@ -53,6 +81,8 @@ artifact-merged:
     execs:
         - render_passes_2k:
           #- args: 'NO_ARGS'
+          - args: 'all1'
+        - render_passes_2k_lod0:
           - args: 'all1'
 
 artifact-separate:

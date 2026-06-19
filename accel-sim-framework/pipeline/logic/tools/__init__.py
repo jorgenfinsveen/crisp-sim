@@ -27,7 +27,10 @@ from typing import OrderedDict, defaultdict, Iterable, Optional
 
 ROOT: Path = Path(os.path.expandvars('$ACCEL_SIM'))
 PIPELINE_ROOT: Path = Path(os.path.join(ROOT, 'pipeline'))
+TOOLS_ROOT: Path = Path(os.path.join(PIPELINE_ROOT, "logic", "tools"))
 PIPELINE_CONFIG: Path = os.path.join(PIPELINE_ROOT, 'settings', 'pipeline.yaml')
+GET_STATS_PER_SM_SCRIPT: Path = Path(os.path.join(TOOLS_ROOT, "get_stats_per_sm.py"))
+GET_STATS_MEM_PARTITION_SCRIPT: Path = Path(os.path.join(TOOLS_ROOT, "get_stats_mem_partition.py"))
 
 DASH_RE = re.compile(r"^-{5,}\s*,*")
 CONFIG_LINE_RE = re.compile(r"^(?P<gpu>[^;]+);;(?P<kv>[^=]+)=(?P<val>.+)$")

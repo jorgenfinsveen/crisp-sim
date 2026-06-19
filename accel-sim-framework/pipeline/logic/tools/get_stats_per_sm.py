@@ -7,14 +7,27 @@ import glob
 import os
 import re
 import sys
+import yaml
+from pathlib import Path
 
-GCSTACK_FIELDS = [
-    'gcstack_base', 'gcstack_idle', 'gcstack_finished', 'gcstack_empty_ibuf',
-    'gcstack_last_ins', 'gcstack_sync', 'gcstack_control', 'gcstack_mem_data',
-    'gcstack_com_data', 'gcstack_mem_struct', 'gcstack_com_struct', 'gcstack_tot',
-]
 
-CSV_FIELDNAMES = ['config', 'trace', 'kernel_name', 'kernel_uid', 'sm_id'] + GCSTACK_FIELDS + ['gcstack_cpi']
+GCSTACK_FIELDS: list[str] = []
+
+
+def _open_stats_file(path: Path):
+    global GCSTACK_FIELDS, CSV_FIELDNAMES
+    stats = {}
+    with open(path, 'r', encoding='utf-8') as f:
+        stats = yaml.safe_load(f) or {}
+    if 'collect_abs' not in stats.keys(): return []
+    abs_stats = stats['collect_abs']
+    for stat in abs_stats:
+        if 'gcstack' in stat and stat != 'gcstack_estimated_cycles':
+            GCSTACK_FIELDS.append(stat)
+
+    CSV_FIELDNAMES = ['config', 'trace', 'kernel_name', 'kernel_uid', 'sm_id'] + GCSTACK_FIELDS + ['gcstack_cpi']
+
+
 
 _SHADER_CORE_RE   = re.compile(r'^SHADER_CORE__ID(\d+)\s*$')
 _GCSTACK_FIELD_RE = re.compile(r'^(gcstack_\w+)\s*=\s*([\d.]+)')
@@ -124,7 +137,20 @@ def main():
                         help='Comma-separated config names')
     parser.add_argument('-d', '--run_id',         required=True,
                         help='Run ID / date string, e.g. 2026_05_19__23_11')
+    parser.add_argument('-s', '--stat_file',       required=False,
+                        help='Path to the stat-file to use.')
     args = parser.parse_args()
+
+    if args.stat_file:
+        if os.path.exists(args.stat_file):
+            _open_stats_file(args.stat_file)
+        else:
+            print("Could not find stat-file. Resolving to default stat-file.")
+            print(f"Missing stat-file: {args.stat_file}")
+    else:
+        stats_dir = Path(os.path.expandvars('$ACCEL_SIM'), 'pipeline', 'settings', 'stats')
+        stat = args.stat_file.strip() if args.stat_file else 'gcstack.yml'
+        _open_stats_file(os.path.join(stats_dir, stat))
 
     benchmarks = [b.strip() for b in args.benchmark_list.split(',')]
     configs    = [c.strip() for c in args.configs_list.split(',')]

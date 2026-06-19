@@ -2,40 +2,48 @@ name_prefix: sim
 
 
 instances:
-    - ORIN_2D
-    - ORIN_1D
+# Streaming multiprocessors
+    # Jetson AGX Orin
+    # - ORIN_2D
+    # - ORIN_1D
     - BASELINE_ORIN
-    - ORIN_1U
-    - ORIN_2U
+    # - ORIN_1U
+    # - ORIN_2U
 
+    # GeForce RTX 3070
+    # - RTX3070_2D
+    # - RTX3070_1D
+    - BASELINE_RTX3070
+    # - RTX3070_1U
+    # - RTX3070_2U
+
+
+# # Memory controllers
+#     # Jetson AGX Orin
+#     - ORIN_N_MEM_8
+#     - ORIN_N_MEM_16
+#     - ORIN_N_MEM_32
+
+#     # GeForce RTX 3070
+#     - RTX3070_N_MEM_8
+#     - RTX3070_N_MEM_16
+#     - RTX3070_N_MEM_32
+
+
+# Cluster hierarchy
+    # Jetson AGX Orin
     - ORIN_TPC
     - ORIN_GPC
 
-    # - BASELINE_ORIN_mem
-    # - ORIN_2U_mem
-    # - ORIN_N_MEM_8
-    # - ORIN_N_MEM_16
-    # - ORIN_N_MEM_32
-
-    - RTX3070_2D
-    - RTX3070_1D
-    - BASELINE_RTX3070
-    - RTX3070_1U
-    - RTX3070_2U
-
+    # GeForce RTX 3070
     - RTX3070_TPC
     - RTX3070_GPC
 
-    # - BASELINE_RTX3070_mem
-    # - RTX3070_2U_mem
-    # - RTX3070_N_MEM_8
-    # - RTX3070_N_MEM_16
-    # - RTX3070_N_MEM_32
 
 
 
 experiment:
-  name: rendering-4k-mig
+  name: cluster-sensitivity #sponza-and-deer-resolution-concurrent # debugging-short # artifact
   path: /cluster/projects/itea_lille-idi-epic-studenter/crisp/settings/experiments.yaml
 
 shared_mode:
@@ -66,7 +74,7 @@ extra_configs:
   - SASS
   - concurrent
   - fg
-  #- VISUAL
+  - VISUAL
 
 
 trace_lookup: $ACCEL_SIM/pipeline/settings/traces.yaml
